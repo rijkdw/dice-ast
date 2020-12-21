@@ -16,7 +16,8 @@ class Dice extends SetLike {
   }
 
   @override
-  String toString() => 'Dice(number=$number, size=$size, die=${die.map((d) => d.toString()).toList()}';
+  String toString() =>
+      'Dice(number=$number, size=$size, die=${die.map((d) => d.toString()).toList()}';
 }
 
 void main() {

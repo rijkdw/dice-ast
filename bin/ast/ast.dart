@@ -2,6 +2,10 @@ import 'token.dart';
 
 class Node {}
 
+// =============================================================================
+// PARENT NODES
+// =============================================================================
+
 class BinOpNode extends Node {
   Token token, op;
   Node left, right;
@@ -19,6 +23,28 @@ class UnaryOpNode extends Node {
     op = token;
   }
 }
+
+class SetOpNode extends Node {
+  Token token, op;
+  Node setNode; // left
+  Node selectorNode; // right
+
+  SetOpNode(this.token, this.setNode, this.selectorNode) {
+    op = token;
+  }
+}
+
+class SelectorNode extends Node {
+  // examples:  h3
+  Token token;
+  int value;
+
+  SelectorNode(this.token, this.value);
+}
+
+// =============================================================================
+// LEAF NODES
+// =============================================================================
 
 class LiteralNode extends Node {
   Token token;

@@ -21,10 +21,13 @@ class Parser {
 
   // AST functions for rules
 
-  Node expr() {}
+  Node expr() {
+    // TODO
+  }
 
   Node atom() {
-    // atom    : (PLUS|MINUS) atom | dice (setOp)* | set (setOp)* | literal
+    // TODO
+    // atom    : ((PLUS|MINUS) atom | dice | set | literal) (setOp)*
   }
 
   Node literal() {
@@ -50,20 +53,15 @@ class Parser {
   }
 
   Node set() {
+    // TODO
     // set   : LPAR (atom (COMMA atom)* COMMA? )? RPAR
-    var token = currentToken;
+    eat(TokenType.LPAR);
+    
+    eat(TokenType.RPAR);
   }
 
   Node setOp() {
-    // setOp   : operation selector
-  }
-
-  Node operation() {
-    // operation   : k|p|e
-  }
-
-  Node selector() {
-    // selector   : (s|h|l) INT
+    // setOp  : operation seltype INT
   }
 
   Node parse() {
@@ -72,8 +70,8 @@ class Parser {
 }
 
 void main() {
-  var expr = '2';
+  var expr = '()';
   var lexer = Lexer(expr);
   var parser = Parser(lexer);
-  print(parser.literal());
+  print(parser.set());
 }

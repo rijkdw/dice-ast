@@ -117,6 +117,21 @@ class Lexer {
         advance();
         return Token(TokenType.DICESEP, 'd');
       }
+      // keep
+      if (currentChar == 'k') {
+        advance();
+        return Token(TokenType.KEEP, 'k');
+      }
+      // drop
+      if (currentChar == 'p') {
+        advance();
+        return Token(TokenType.DROP, 'p');
+      }
+      // explode
+      if (currentChar == 'e') {
+        advance();
+        return Token(TokenType.EXPLODE, 'e');
+      }
       // if nothing matches, it's unrecognised and a syntax error is raised
       error.raiseError();
     }

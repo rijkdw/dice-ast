@@ -1,5 +1,3 @@
 import 'setlike.dart';
 
-class Set extends SetLike {
-  
-}
+class Set extends SetLike {}
