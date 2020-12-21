@@ -1,15 +1,6 @@
 import 'token.dart';
 import '../utils.dart';
-
-enum ErrorType {
-  invalidSyntax,
-}
-
-String errorToString(ErrorType errorType) {
-  return <ErrorType, String>{
-    ErrorType.invalidSyntax: 'Invalid syntax',
-  }[errorType];
-}
+import 'error.dart' as error;
 
 class Lexer {
   // ATTRIBUTES
@@ -23,11 +14,6 @@ class Lexer {
   }
 
   // FUNCTIONS
-
-  // raise an error for invalid syntax
-  void raiseError({ErrorType errorType}) {
-    throw Exception('Error -- ${errorToString(errorType)}');
-  }
 
   void advance() {
     /**
@@ -50,7 +36,7 @@ class Lexer {
     }
   }
 
-  dynamic real() {
+  Token number() {
     /**
      * A real number.
      */
@@ -60,7 +46,7 @@ class Lexer {
       advance();
     }
 
-    // here, we either reach the decimal dot or something else.
+    // here, we either reach the decimal dot (which means it is a real value)...
     if (currentChar == '.') {
       result += '.';
       advance();
@@ -69,9 +55,11 @@ class Lexer {
         advance();
       }
     } else {
-      return int.parse(result);
+      // ...or we've reached an integer
+      return Token(TokenType.INT, int.parse(result));
     }
-    return double.parse(result);
+    // return the double constructed in the above if clause body.
+    return Token(TokenType.REAL, double.parse(result));
   }
 
   Token getNextToken() {
@@ -85,55 +73,55 @@ class Lexer {
         skipWhitespace();
         continue;
       }
-      // more complicated tokens get their own function, such as real()
+      // more complicated tokens get their own function, such as number()
       if (isDigit(currentChar)) {
-        return Token(TokenType.real, real());
+        return number();
       }
       // plus
       if (currentChar == '+') {
         advance();
-        return Token(TokenType.plus, '+');
+        return Token(TokenType.PLUS, '+');
       }
       // minus
       if (currentChar == '-') {
         advance();
-        return Token(TokenType.minus, '-');
+        return Token(TokenType.MINUS, '-');
       }
       // multiply
       if (currentChar == '*') {
         advance();
-        return Token(TokenType.mul, '*');
+        return Token(TokenType.MUL, '*');
       }
       // divide
       if (currentChar == '/') {
         advance();
-        return Token(TokenType.div, '/');
+        return Token(TokenType.DIV, '/');
       }
       // left parenthesis
       if (currentChar == '(') {
         advance();
-        return Token(TokenType.lpar, '(');
+        return Token(TokenType.LPAR, '(');
       }
       // right parenthesis
       if (currentChar == ')') {
         advance();
-        return Token(TokenType.rpar, ')');
+        return Token(TokenType.RPAR, ')');
       }
       // comma
       if (currentChar == ',') {
         advance();
-        return Token(TokenType.comma, ',');
+        return Token(TokenType.COMMA, ',');
       }
       // dice
       if (currentChar == 'd') {
         advance();
-        return Token(TokenType.dice, 'd');
+        return Token(TokenType.DICESEP, 'd');
       }
       // if nothing matches, it's unrecognised and a syntax error is raised
-      raiseError();
+      error.raiseError();
     }
     // end of the file default
-    return Token(TokenType.eof, null);
+    return Token(TokenType.EOF, null);
   }
 }
 
@@ -147,6 +135,6 @@ void main() {
     do {
       token = lexer.getNextToken();
       print('$token -- \t${token.value}');
-    } while (token.type != TokenType.eof);
+    } while (token.type != TokenType.EOF);
   }
 }

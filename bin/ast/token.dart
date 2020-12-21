@@ -1,16 +1,26 @@
 enum TokenType {
-  real,     // 1, 2, 3.14, 0.5
-  integer,  // 1, 2, 3
-  dot,      // .
-  comma,    // ,
-  dice,     // d
-  plus,     // +
-  minus,    // -
-  mul,      // *
-  div,      // /
-  lpar,     // (
-  rpar,     // )
-  eof,
+  // generic
+  REAL, // 1, 2, 3.14, 0.5
+  INT, // 1, 2, 3
+  DOT, // .
+  COMMA, // ,
+  DICESEP, // d
+  LPAR, // (
+  RPAR, // )
+  EOF,
+  // set operations
+  KEEP, // k
+  DROP, // p
+  EXPLODE, // e
+  // set operation selectors
+  EXACTLY, // s
+  HIGHEST, // h
+  LOWEST, // l
+  // binary operators
+  PLUS, // +
+  MINUS, // -
+  MUL, // *
+  DIV, // /
 }
 
 class Token {

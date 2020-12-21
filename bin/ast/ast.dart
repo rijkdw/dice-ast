@@ -1,30 +1,43 @@
 import 'token.dart';
 
-class AST {}
+class Node {}
 
-class BinOp extends AST {
+class BinOpNode extends Node {
   Token token, op;
-  AST left, right;
+  Node left, right;
 
-  BinOp(this.left, this.op, this.right) {
+  BinOpNode(this.left, this.op, this.right) {
     token = op;
   }
 }
 
-class UnaryOp extends AST {
+class UnaryOpNode extends Node {
   Token token, op;
-  AST expr;
+  Node expr;
 
-  UnaryOp(this.token, this.expr) {
+  UnaryOpNode(this.token, this.expr) {
     op = token;
   }
 }
 
-class Number extends AST {
+class LiteralNode extends Node {
   Token token;
   dynamic value;
 
-  Number(this.token) {
+  LiteralNode(this.token) {
     value = token.value;
   }
+
+  @override
+  String toString() => 'LiteralNode(value=$value)';
+}
+
+class DiceNode extends Node {
+  Token token;
+  int number, size;
+
+  DiceNode(this.number, this.size);
+
+  @override
+  String toString() => 'DiceNode(number=$number, size=$size)';
 }
