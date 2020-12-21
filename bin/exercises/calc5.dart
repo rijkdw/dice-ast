@@ -1,6 +1,6 @@
-import 'utils.dart';
+import '../utils.dart';
 
-enum TokenType { integer, plus, minus, eof }
+enum TokenType { integer, plus, minus, mul, div, eof }
 
 class Token {
   TokenType type;
@@ -12,19 +12,14 @@ class Token {
   String toString() => '$Token($type, $value)';
 }
 
-class Interpreter {
+class Lexer {
   String text;
   int pos = 0;
-  Token currentToken;
   String currentChar;
 
-  Interpreter(this.text) {
+  Lexer(this.text) {
     currentChar = text[0];
   }
-
-  // ===========================================================================
-  // Lexer code
-  // ===========================================================================
 
   void raiseError() {
     throw Exception('Invalid syntax');
@@ -71,27 +66,65 @@ class Interpreter {
         advance();
         return Token(TokenType.minus, '-');
       }
+      if (currentChar == '*') {
+        advance();
+        return Token(TokenType.mul, '*');
+      }
+      if (currentChar == '/') {
+        advance();
+        return Token(TokenType.div, '/');
+      }
       raiseError();
     }
     return Token(TokenType.eof, null);
   }
+}
+
+class Interpreter {
+  Lexer lexer;
+  Token currentToken;
+
+  Interpreter(this.lexer) {
+    currentToken = lexer.getNextToken();
+  }
+
+  void raiseError() {
+    throw Exception('Invalid syntax');
+  }
 
   void eat(TokenType type) {
     if (currentToken.type == type) {
-      currentToken = getNextToken();
+      currentToken = lexer.getNextToken();
     } else {
       raiseError();
     }
   }
 
-  int term() {
+  int factor() {
+    // factor : INT
     var token = currentToken;
     eat(TokenType.integer);
     return token.value;
   }
 
+  int term() {
+    // term : factor ( (MUL|DIV) factor ) *
+    var result = factor();
+
+    while ([TokenType.mul, TokenType.div].contains(currentToken.type)) {
+      var token = currentToken;
+      if (token.type == TokenType.mul) {
+        eat(TokenType.mul);
+        result *= factor();
+      } else if (token.type == TokenType.div) {
+        eat(TokenType.div);
+        result ~/= factor();
+      }
+    }
+    return result;
+  }
+
   int expr() {
-    currentToken = getNextToken();
     var result = term();
     while ([TokenType.plus, TokenType.minus].contains(currentToken.type)) {
       var token = currentToken;
@@ -108,10 +141,11 @@ class Interpreter {
 }
 
 void main() {
-  var equations = ['2+3', '2+3+4', '6+10-3'];
-  var interpreter;
+  var equations = ['2+3', '3/4+1*6', '1+2+3*6/3', '1*2*3*0+3*3-1*2'];
+  var lexer, interpreter;
   for (var equation in equations) {
-    interpreter = Interpreter(equation);
+    lexer = Lexer(equation);
+    interpreter = Interpreter(lexer);
     var result = interpreter.expr();
     print('$equation = $result');
   }

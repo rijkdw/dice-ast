@@ -1,4 +1,4 @@
-import 'utils.dart';
+import '../utils.dart';
 
 enum TokenType { integer, plus, minus, mul, div, lpar, rpar, eof }
 

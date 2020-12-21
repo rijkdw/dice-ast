@@ -1,4 +1,4 @@
-import 'utils.dart';
+import '../utils.dart';
 
 enum TokenType { integer, plus, minus, mul, div, eof }
 
@@ -101,19 +101,28 @@ class Interpreter {
   }
 
   int factor() {
-    // factor : INT
     var token = currentToken;
     eat(TokenType.integer);
     return token.value;
   }
 
-  int term() {
-    // term : factor ( (MUL|DIV) factor ) *
+  int expr() {
     var result = factor();
-
-    while ([TokenType.mul, TokenType.div].contains(currentToken.type)) {
+    var operators = [
+      TokenType.plus,
+      TokenType.minus,
+      TokenType.mul,
+      TokenType.div
+    ];
+    while (operators.contains(currentToken.type)) {
       var token = currentToken;
-      if (token.type == TokenType.mul) {
+      if (token.type == TokenType.plus) {
+        eat(TokenType.plus);
+        result += factor();
+      } else if (token.type == TokenType.minus) {
+        eat(TokenType.minus);
+        result -= factor();
+      } else if (token.type == TokenType.mul) {
         eat(TokenType.mul);
         result *= factor();
       } else if (token.type == TokenType.div) {
@@ -123,25 +132,10 @@ class Interpreter {
     }
     return result;
   }
-
-  int expr() {
-    var result = term();
-    while ([TokenType.plus, TokenType.minus].contains(currentToken.type)) {
-      var token = currentToken;
-      if (token.type == TokenType.plus) {
-        eat(TokenType.plus);
-        result += term();
-      } else if (token.type == TokenType.minus) {
-        eat(TokenType.minus);
-        result -= term();
-      }
-    }
-    return result;
-  }
 }
 
 void main() {
-  var equations = ['2+3', '3/4+1*6', '1+2+3*6/3', '1*2*3*0+3*3-1*2'];
+  var equations = ['2+3', '3/4+1*6'];
   var lexer, interpreter;
   for (var equation in equations) {
     lexer = Lexer(equation);

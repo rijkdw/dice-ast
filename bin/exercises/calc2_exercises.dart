@@ -2,7 +2,7 @@
 // Extend the calculator to handle division of two integers
 // Modify the code to interpret expressions containing an arbitrary number of additions and subtractions, for example “9 - 5 + 3 + 11”
 
-import 'utils.dart';
+import '../utils.dart';
 
 enum TokenType { integer, plus, minus, multiply, divide, eof }
 

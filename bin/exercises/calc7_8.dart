@@ -2,9 +2,9 @@
 // TOKEN
 // =============================================================================
 
-import 'utils.dart';
+import '../utils.dart';
 
-enum TokenType { real, plus, minus, mul, div, lpar, rpar, eof }
+enum TokenType { integer, plus, minus, mul, div, lpar, rpar, eof }
 
 class Token {
   TokenType type;
@@ -81,25 +81,13 @@ class Lexer {
     }
   }
 
-  dynamic real() {
+  int integer() {
     var result = '';
     while (currentChar != null && isDigit(currentChar)) {
       result += currentChar;
       advance();
     }
-
-    // here, we either reach the decimal dot or something else.
-    if (currentChar == '.') {
-      result += '.';
-      advance();
-      while (currentChar != null && isDigit(currentChar)) {
-        result += currentChar;
-        advance();
-      }
-    } else {
-      return int.parse(result);
-    }
-    return double.parse(result);
+    return int.parse(result);
   }
 
   Token getNextToken() {
@@ -109,7 +97,7 @@ class Lexer {
         continue;
       }
       if (isDigit(currentChar)) {
-        return Token(TokenType.real, real());
+        return Token(TokenType.integer, integer());
       }
       if (currentChar == '+') {
         advance();
@@ -176,8 +164,8 @@ class Parser {
       eat(TokenType.minus);
       var node = UnaryOp(token, factor());
       return node;
-    } else if (token.type == TokenType.real) {
-      eat(TokenType.real);
+    } else if (token.type == TokenType.integer) {
+      eat(TokenType.integer);
       return Num(token);
     } else if (token.type == TokenType.lpar) {
       eat(TokenType.lpar);
@@ -275,7 +263,7 @@ class Interpreter extends NodeVisitor {
     }
   }
 
-  dynamic interpret() {
+  int interpret() {
     var tree = parser.parse();
     return visit(tree);
   }
@@ -284,7 +272,7 @@ class Interpreter extends NodeVisitor {
 void main() {
   print('Parsing of string inputs:');
   var lexer, parser, interpreter, result;
-  var equations = ['5', '3.14', '1+1.5', '1-1.5'];
+  var equations = ['5', '-5', '--5', '---5', '+5'];
 
   for (var equation in equations) {
     lexer = Lexer(equation);
