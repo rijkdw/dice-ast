@@ -238,6 +238,7 @@ class Interpreter extends NodeVisitor {
   }
 
   dynamic visitBinOp(BinOp node) {
+    // ignore: missing_enum_constant_in_switch
     switch (node.op.type) {
       case TokenType.plus:
         return visit(node.left) + visit(node.right);

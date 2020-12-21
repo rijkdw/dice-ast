@@ -13,6 +13,9 @@ class BinOpNode extends Node {
   BinOpNode(this.left, this.op, this.right) {
     token = op;
   }
+
+  @override
+  String toString() => 'BinOpNode(left=$left, op=$op, right=$right)';
 }
 
 class UnaryOpNode extends Node {
