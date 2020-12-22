@@ -10,6 +10,7 @@ class Lexer {
 
   // CONSTRUCTOR
   Lexer(this.text) {
+    text = text.replaceAll(' ', '');
     currentChar = text[0];
   }
 
@@ -45,19 +46,36 @@ class Lexer {
     }
   }
 
-  bool isDigitFollowedByDiceSep() {
-    var peek_pos = pos;
-    var peek_char = text[peek_pos];
+  String get lookAhead => text.substring(pos);
 
-    // is this a digit?  if not, return false
-    if (!isDigit(peek_char)) {
-      return false;
-    };
+  bool isDice() {
+    var textAhead = lookAhead;
+    var diceRegex = RegExp(r'^\d+d\d+');
+    return diceRegex.hasMatch(textAhead);
+  }
 
-    // repeatedly 1. advance once, 2. check
-    while (peek_pos < text.length - 1) {
-      
+  bool isSet() {
+    var textAhead = lookAhead;
+    var atom = r'[a-z0-9,\+\-\/\*\(\)]+';
+    var setRegexes = <String>[
+      '\\( \\)',
+      '\\( $atom , \\)',
+      '\\( $atom , $atom (, $atom)* ,?\\)'
+    ].map((regex) => "^(${regex.replaceAll(' ', '')})").toList();
+    var setRegex = RegExp(join(setRegexes, '|'));
+    return setRegex.hasMatch(textAhead)
+        && ('('.allMatches(textAhead).length == ')'.allMatches(textAhead).length);
+  }
+
+  bool commaBeforeNextPar() {
+    var peek_pos = pos+1;
+    while (peek_pos < text.length-1 && text[peek_pos] != ')' && text[peek_pos] != '(') {
+      if (text[peek_pos] == ',') {
+        return true;
+      }
+      peek_pos++;
     }
+    return false;
   }
 
   Token number() {
@@ -86,6 +104,25 @@ class Lexer {
     return Token(TokenType.REAL, double.parse(result));
   }
 
+  Token dice() {
+    /**
+     * A dice (1d4, 5d6, 1d20).
+     */
+
+    var result = '';
+    while (currentChar != null && isDigit(currentChar)) {
+      result += currentChar;
+      advance();
+    }
+    result += currentChar;
+    advance();
+    while (currentChar != null && isDigit(currentChar)) {
+      result += currentChar;
+      advance();
+    }
+    return Token(TokenType.DICE, result);
+  }
+
   Token getNextToken() {
     /**
      * Get the next token in the text.
@@ -97,9 +134,13 @@ class Lexer {
         skipWhitespace();
         continue;
       }
-      // more complicated tokens get their own function, such as number()
+      // if a digit is present, it can either be a dice or a literal
       if (isDigit(currentChar)) {
-        return number();
+        if (isDice()) {
+          return dice();
+        } else {
+          return number();
+        }
       }
       // plus
       if (currentChar == '+') {
@@ -137,10 +178,10 @@ class Lexer {
         return Token(TokenType.COMMA, ',');
       }
       // dice
-      if (currentChar == 'd') {
-        advance();
-        return Token(TokenType.DICESEP, 'd');
-      }
+      // if (currentChar == 'd') {
+      //   advance();
+      //   return Token(TokenType.DICESEP, 'd');
+      // }
       // keep
       if (currentChar == 'k') {
         advance();
@@ -157,7 +198,7 @@ class Lexer {
         return Token(TokenType.EXPLODE, 'e');
       }
       // if nothing matches, it's unrecognised and a syntax error is raised
-      error.raiseError();
+      error.raiseError(error.ErrorType.invalidSyntax);
     }
     // end of the file default
     return Token(TokenType.EOF, null);
@@ -166,7 +207,7 @@ class Lexer {
 
 void main() {
   Lexer lexer;
-  var texts = ['1d4', '1.5', '7', '(1, 2, 3)'];
+  var texts = ['1d4', '1.5', '7', '(1, 2, 3)', '4+4d4+1'];
   for (var text in texts) {
     lexer = Lexer(text);
     print(text);
@@ -176,4 +217,79 @@ void main() {
       print('$token -- \t${token.value}');
     } while (token.type != TokenType.EOF);
   }
+
+  // dice separator tests
+  print('\nDice separator tests');
+  var diceSeparatorTests = ['1d4', '10d10', '1d20', '1d100', '1d', 'd4'];
+  var diceSeparatorTestResults = [true, true, true, true, false, false];
+  var diceSeparatorTestFails = 0;
+  for (var i = 0; i < diceSeparatorTests.length; i++) {
+    lexer = Lexer(diceSeparatorTests[i]);
+    print(lexer.text);
+    var result = lexer.isDice();
+    print((result == diceSeparatorTestResults[i] ? 'Success' : 'Failure')
+        + ' -- expected ${diceSeparatorTestResults[i]}, got $result.');
+    if (result != diceSeparatorTestResults[i]) {
+      diceSeparatorTestFails++;
+    }
+  }
+  print(diceSeparatorTestFails == 0
+      ? 'All dice tests passed.'
+      : '$diceSeparatorTestFails dice test failures.'
+  );
+
+  // set tests
+  print('\nSet tests');
+  var setTests = <String, bool>{
+    '()': true,
+    '(1)': false,
+    '(1d4)': false,
+    '(1d4,)': true,
+    '(,)': false,
+    '((1), 1)': true,
+    '((1,)': false,
+    '(1, 1, 1d4)': true,
+    '(1--3, (1+3, 2*1, 3)kh1)': true,
+
+  };
+  var setTestFails = 0;
+  for (var test in setTests.keys) {
+    var lexer = Lexer(test);
+    var desiredResult = setTests[test];
+    print(lexer.text);
+    var obtainedResult = lexer.isSet();
+    print((obtainedResult == desiredResult ? 'Success' : 'Failure')
+        + ' -- expected ${desiredResult}, got $obtainedResult.');
+    if (obtainedResult != desiredResult) {
+      setTestFails++;
+    }
+  }
+  print(setTestFails == 0
+      ? 'All set tests passed.'
+      : '$setTestFails set test failures.'
+  );
+
+  // comma tests
+  print('\nComma set tests');
+  var commaTests = <String, bool>{
+    '(abc,(': true,
+    '(abc,)': true,
+    '(abc(': false,
+  };
+  var commaTestFails = 0;
+  for (var test in commaTests.keys) {
+    var lexer = Lexer(test);
+    var desiredResult = commaTests[test];
+    print(lexer.text);
+    var obtainedResult = lexer.commaBeforeNextPar();
+    print((obtainedResult == desiredResult ? 'Success' : 'Failure')
+        + ' -- expected ${desiredResult}, got $obtainedResult.');
+    if (obtainedResult != desiredResult) {
+      commaTestFails++;
+    }
+  }
+  print(commaTestFails == 0
+      ? 'All comma tests passed.'
+      : '$commaTestFails comma test failures.'
+  );
 }

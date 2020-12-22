@@ -5,9 +5,13 @@ enum TokenType {
   DOT, // .
   COMMA, // ,
   DICESEP, // d
+  
   LPAR, // (
   RPAR, // )
   EOF,
+  // primitives
+  DICE, // 1d4, 2d6, 10d8
+  SET, // (), (1,), (1,2,3), (1d4,3+3,1d20)
   // set operations
   KEEP, // k
   DROP, // p
@@ -30,5 +34,5 @@ class Token {
   Token(this.type, this.value);
 
   @override
-  String toString() => '$Token($type, $value)';
+  String toString() => '$Token($type, \"$value\")';
 }

@@ -3,6 +3,12 @@ import 'token.dart';
 class Node {}
 
 // =============================================================================
+// MIXINS
+// =============================================================================
+
+// TODO?
+
+// =============================================================================
 // PARENT NODES
 // =============================================================================
 
@@ -27,7 +33,20 @@ class UnaryOpNode extends Node {
   }
 }
 
+class SetNode extends Node {
+  Token token;
+  List<Node> children;
+
+  SetNode(this.token, this.children);
+
+  @override
+  String toString() {
+    return 'SetNode(children=$children)';
+  }
+}
+
 class SetOpNode extends Node {
+  // TODO
   Token token, op;
   Node setNode; // left
   Node selectorNode; // right
@@ -38,6 +57,7 @@ class SetOpNode extends Node {
 }
 
 class SelectorNode extends Node {
+  // TODO
   // examples:  h3
   Token token;
   int value;
@@ -65,8 +85,19 @@ class DiceNode extends Node {
   Token token;
   int number, size;
 
-  DiceNode(this.number, this.size);
+  DiceNode(this.token, this.number, this.size);
+
+  factory DiceNode.fromToken(Token token) {
+    var diceRegex = RegExp(r'(\d+)d(\d+)');
+    var matches = diceRegex.firstMatch(token.value).groups([1, 2]);
+    return DiceNode(token, int.parse(matches.first), int.parse(matches.last));
+  }
 
   @override
   String toString() => 'DiceNode(number=$number, size=$size)';
+}
+
+void main() {
+  var token = Token(TokenType.DICE, '10d3');
+  print(DiceNode.fromToken(token));
 }
