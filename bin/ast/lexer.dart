@@ -36,6 +36,30 @@ class Lexer {
     }
   }
 
+  String peek([int offset]) {
+    var peek_pos = pos + (offset ?? 1);
+    if (peek_pos > text.length - 1) {
+      return null;
+    } else {
+      return text[peek_pos];
+    }
+  }
+
+  bool isDigitFollowedByDiceSep() {
+    var peek_pos = pos;
+    var peek_char = text[peek_pos];
+
+    // is this a digit?  if not, return false
+    if (!isDigit(peek_char)) {
+      return false;
+    };
+
+    // repeatedly 1. advance once, 2. check
+    while (peek_pos < text.length - 1) {
+      
+    }
+  }
+
   Token number() {
     /**
      * A real number.

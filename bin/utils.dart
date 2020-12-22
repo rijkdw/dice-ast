@@ -19,11 +19,26 @@ Random _random = Random();
 // [min, max]
 int randInRange(int min, int max) => min + _random.nextInt(max + 1 - min);
 
-void main() {
-  var map = <int, int>{1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0};
-  for (var i = 0; i < 10000000; i++) {
-    var value = randInRange(1, 6);
-    map[value]++;
+// STRINGS
+String join(List<dynamic> list, String delim) {
+  var output = '';
+  for (var i = 0; i < list.length-1; i++) {
+    output += list[i].toString();
+    output += delim;
   }
-  print(map);
+  output += list.last;
+  return output;
+}
+
+String wrapWith(String s, String w, [String r]) {
+  return w + s + (r ?? w);
+}
+
+
+void main() {
+  var myStrings = ['a', 'b', 'c'];
+  print(join(myStrings, ','));
+  print(join(myStrings, '-'));
+  print(wrapWith('hey', "'"));
+  print(wrapWith('hey', '(', ')'));
 }

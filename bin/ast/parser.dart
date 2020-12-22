@@ -135,7 +135,7 @@ class Parser {
 }
 
 void main() {
-  var expr = '(1+3)*2';
+  var expr = '(1+3)*25';
   var lexer = Lexer(expr);
   var parser = Parser(lexer);
   print(parser.expr());
