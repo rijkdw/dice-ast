@@ -8,6 +8,7 @@ environment:
 
 dependencies:
   petitparser:
+  ansicolor:
 #  path: ^1.7.0
 
 dev_dependencies:

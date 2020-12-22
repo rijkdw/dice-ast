@@ -1,6 +1,11 @@
+import '../utils.dart';
 import 'token.dart';
 
-class Node {}
+class Node {
+
+  String visualise() {}
+
+}
 
 // =============================================================================
 // MIXINS
@@ -22,6 +27,9 @@ class BinOpNode extends Node {
 
   @override
   String toString() => 'BinOpNode(left=$left, op=$op, right=$right)';
+
+  @override
+  String visualise() => '${left.visualise()}${op.value}${right.visualise()}';
 }
 
 class UnaryOpNode extends Node {
@@ -34,6 +42,9 @@ class UnaryOpNode extends Node {
 
   @override
   String toString() => 'UnaryOpNode(op=$op, child=$expr)';
+
+  @override
+  String visualise() => '${op.value}${expr.visualise()}';
 }
 
 class SetNode extends Node {
@@ -46,6 +57,9 @@ class SetNode extends Node {
   String toString() {
     return 'SetNode(children=$children)';
   }
+
+  @override
+  String visualise() => '(' + join(children.map((c)=>c.visualise()).toList(), ', ') + ')';
 }
 
 class SetOpNode extends Node {
@@ -82,6 +96,9 @@ class LiteralNode extends Node {
 
   @override
   String toString() => 'LiteralNode(value=$value)';
+
+  @override
+  String visualise() => '${value}';
 }
 
 class DiceNode extends Node {
@@ -98,6 +115,9 @@ class DiceNode extends Node {
 
   @override
   String toString() => 'DiceNode(number=$number, size=$size)';
+
+  @override
+  String visualise() => '${number}d${size}';
 }
 
 void main() {

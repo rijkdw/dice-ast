@@ -203,7 +203,7 @@ void main() {
     '10d20',
     // sets
     '(1)',
-    '(1,2)'
+    '(1,2)',
     '(1, 3,    20)',
     '(1,1d4,1d12)',
     '(1, 2+2, 3*2*(2+1), (1, 2, 3), 1d20+3)'
@@ -215,7 +215,8 @@ void main() {
     lexer = Lexer(expr);
     parser = Parser(lexer);
     if (Parser.canParse(expr)) {
-      print('$expr:\n  Success\n  ${parser.parse()}');
+      var result = parser.parse();
+      print('$expr:\n  Success\n  ${result}\n  Visualised as ${result.visualise()}');
     }
     else {
       print('$expr:\n  Failure');
