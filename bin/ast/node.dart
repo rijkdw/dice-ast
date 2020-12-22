@@ -31,6 +31,9 @@ class UnaryOpNode extends Node {
   UnaryOpNode(this.token, this.expr) {
     op = token;
   }
+
+  @override
+  String toString() => 'UnaryOpNode(op=$op, child=$expr)';
 }
 
 class SetNode extends Node {

@@ -1,4 +1,4 @@
-import 'ast.dart';
+import 'node.dart';
 import 'lexer.dart';
 import 'token.dart';
 import 'error.dart' as error;
@@ -6,8 +6,9 @@ import 'error.dart' as error;
 class Parser {
   Lexer lexer;
   Token currentToken;
+  bool verbose;
 
-  Parser(this.lexer) {
+  Parser(this.lexer, {this.verbose=false}) {
     currentToken = lexer.getNextToken();
   }
 
@@ -74,7 +75,7 @@ class Parser {
       return UnaryOpNode(token, factor());
     // atom
     } else if ([TokenType.INT, TokenType.REAL, TokenType.DICE].contains(currentToken.type) || lexer.commaBeforeNextPar()) {
-      print('Parser.factor() thinks this is an atom');
+      _debugPrint('Parser.factor() thinks this is an atom');
       return atom();
     // LPAR expr RPAR
     } else if (currentToken.type == TokenType.LPAR) {
@@ -166,14 +167,59 @@ class Parser {
     return expr();
   }
 
+  static bool canParse(String testText) {
+    var testLexer = Lexer(testText);
+    var testParser = Parser(testLexer);
+    try {
+      testParser.parse();
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  void _debugPrint(String msg) {
+    if (verbose) {
+      print(msg);
+    }
+  }
+
   void _printStatus(String functionName)  {
-    print('> $functionName\n  currentToken=$currentToken\n  lookahead=\"${lexer.lookAhead}\"');
+    _debugPrint('> $functionName\n  currentToken=$currentToken\n  lookahead=\"${lexer.lookAhead}\"');
   }
 }
 
 void main() {
-  var expr = '(1d4+3, 4d6)';
-  var lexer = Lexer(expr);
-  var parser = Parser(lexer);
-  print(parser.parse());
+  var expressions = <String>[
+    // basic arithmetic
+    '1',
+    '10',
+    '1+12',
+    '1-1',
+    '1-+-3',
+    // dice
+    '1d4',
+    '10d20',
+    // sets
+    '(1)',
+    '(1,2)'
+    '(1, 3,    20)',
+    '(1,1d4,1d12)',
+    '(1, 2+2, 3*2*(2+1), (1, 2, 3), 1d20+3)'
+  ];
+  Lexer lexer;
+  Parser parser;
+
+  for (var expr in expressions) {
+    lexer = Lexer(expr);
+    parser = Parser(lexer);
+    if (Parser.canParse(expr)) {
+      print('$expr:\n  Success\n  ${parser.parse()}');
+    }
+    else {
+      print('$expr:\n  Failure');
+    }
+  }
+  
 }

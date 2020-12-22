@@ -1,6 +1,6 @@
 import 'dart:math';
 
-// boolean checks
+// BOOLEANS
 
 bool isNumeric(String s) {
   if (s == null) return false;
@@ -12,7 +12,7 @@ bool isDigit(String s) => isNumeric(s) && s.length == 1;
 
 bool isSpace(String s) => s.trim().isEmpty;
 
-// random
+// RANDOM
 
 Random _random = Random();
 
@@ -20,6 +20,7 @@ Random _random = Random();
 int randInRange(int min, int max) => min + _random.nextInt(max + 1 - min);
 
 // STRINGS
+
 String join(List<dynamic> list, String delim) {
   var output = '';
   for (var i = 0; i < list.length-1; i++) {
@@ -32,6 +33,21 @@ String join(List<dynamic> list, String delim) {
 
 String wrapWith(String s, String w, [String r]) {
   return w + s + (r ?? w);
+}
+
+// LISTS
+
+int countInList(List<dynamic> list, dynamic val, [Function map]) {
+  if (map != null) {
+    list = list.map(map).toList();
+  }
+  var count = 0;
+  list.forEach((item) {
+    if (item == val) {
+      count++;
+    }
+  });
+  return count;
 }
 
 void main() {
