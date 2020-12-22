@@ -29,7 +29,7 @@ class BinOpNode extends Node {
   String toString() => 'BinOpNode(left=$left, op=$op, right=$right)';
 
   @override
-  String visualise() => '${left.visualise()}${op.value}${right.visualise()}';
+  String visualise() => '(${left.visualise()}${op.value}${right.visualise()})';
 }
 
 class UnaryOpNode extends Node {
@@ -59,7 +59,7 @@ class SetNode extends Node {
   }
 
   @override
-  String visualise() => '(' + join(children.map((c)=>c.visualise()).toList(), ', ') + ')';
+  String visualise() => '[' + join(children.map((c)=>c.visualise()).toList(), ', ') + ']';
 }
 
 class SetOpNode extends Node {
