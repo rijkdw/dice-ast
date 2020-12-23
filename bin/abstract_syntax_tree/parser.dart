@@ -269,7 +269,7 @@ void main() {
     // dice with set ops
     '4d6kh3',
     '4d6kh3kh2',
-    '10d6kh3pl2',
+    '10d6k>2',
     // sets
     '(1)',
     '(1,2)',
@@ -277,7 +277,7 @@ void main() {
     '(1,1d4,1d12)',
     '(1, 2+2, 3*2*(2+1), (1, 2, 3), 1d20+3)',
     // sets with set ops
-    '(1,2,3)kh1'
+    '(1,2,3)kh1',
   ];
   Lexer lexer;
   Parser parser;
