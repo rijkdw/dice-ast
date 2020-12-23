@@ -18,11 +18,11 @@ class AstNode {
 // PARENT NODES
 // =============================================================================
 
-class BinOpNode extends AstNode {
+class BinOpAstNode extends AstNode {
   Token token, op;
   AstNode left, right;
 
-  BinOpNode(this.left, this.op, this.right) {
+  BinOpAstNode(this.left, this.op, this.right) {
     token = op;
   }
 
@@ -33,11 +33,11 @@ class BinOpNode extends AstNode {
   String visualise() => '(${left.visualise()}${op.value}${right.visualise()})';
 }
 
-class UnaryOpNode extends AstNode {
+class UnaryOpAstNode extends AstNode {
   Token token, op;
   AstNode expr;
 
-  UnaryOpNode(this.token, this.expr) {
+  UnaryOpAstNode(this.token, this.expr) {
     op = token;
   }
 
@@ -48,11 +48,11 @@ class UnaryOpNode extends AstNode {
   String visualise() => '${op.value}${expr.visualise()}';
 }
 
-class SetNode extends AstNode {
+class SetAstNode extends AstNode {
   Token token;
   List<AstNode> children;
 
-  SetNode(this.token, this.children);
+  SetAstNode(this.token, this.children);
 
   @override
   String toString() {
@@ -63,12 +63,12 @@ class SetNode extends AstNode {
   String visualise() => '[' + join(children.map((c) => c.visualise()).toList(), ', ') + ']';
 }
 
-class SetOpNode extends AstNode {
+class SetOpAstNode extends AstNode {
   String op, sel;
   int val;
   AstNode child;
 
-  SetOpNode(this.child, this.op, this.sel, this.val);
+  SetOpAstNode(this.child, this.op, this.sel, this.val);
 
   @override
   String toString() => 'SetOpNode(op=$op, sel=$sel, val=$val, child=$child)';
@@ -81,11 +81,11 @@ class SetOpNode extends AstNode {
 // LEAF NODES
 // =============================================================================
 
-class LiteralNode extends AstNode {
+class LiteralAstNode extends AstNode {
   Token token;
-  dynamic value;
+  num value;
 
-  LiteralNode(this.token) {
+  LiteralAstNode(this.token) {
     value = token.value;
   }
 
@@ -96,16 +96,16 @@ class LiteralNode extends AstNode {
   String visualise() => '${value}';
 }
 
-class DiceNode extends AstNode {
+class DiceAstNode extends AstNode {
   Token token;
   int number, size;
 
-  DiceNode(this.token, this.number, this.size);
+  DiceAstNode(this.token, this.number, this.size);
 
-  factory DiceNode.fromToken(Token token) {
+  factory DiceAstNode.fromToken(Token token) {
     var diceRegex = RegExp(r'(\d+)d(\d+)');
     var matches = diceRegex.firstMatch(token.value).groups([1, 2]);
-    return DiceNode(token, int.parse(matches.first), int.parse(matches.last));
+    return DiceAstNode(token, int.parse(matches.first), int.parse(matches.last));
   }
 
   @override
@@ -117,5 +117,5 @@ class DiceNode extends AstNode {
 
 void main() {
   var token = Token(TokenType.DICE, '10d3');
-  print(DiceNode.fromToken(token));
+  print(DiceAstNode.fromToken(token));
 }

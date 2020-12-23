@@ -38,7 +38,7 @@ class Parser {
       } else if (token.type == TokenType.MINUS) {
         eat(TokenType.MINUS);
       }
-      node = BinOpNode(node, token, term());
+      node = BinOpAstNode(node, token, term());
     }
     return node;
   }
@@ -56,7 +56,7 @@ class Parser {
       } else if (token.type == TokenType.DIV) {
         eat(TokenType.DIV);
       }
-      node = BinOpNode(node, token, factor());
+      node = BinOpAstNode(node, token, factor());
     }
     return node;
   }
@@ -69,10 +69,10 @@ class Parser {
     // (PLUS|MINUS) factor
     if (currentToken.type == TokenType.PLUS) {
       eat(TokenType.PLUS);
-      return UnaryOpNode(token, factor());
+      return UnaryOpAstNode(token, factor());
     } else if (currentToken.type == TokenType.MINUS) {
       eat(TokenType.MINUS);
-      return UnaryOpNode(token, factor());
+      return UnaryOpAstNode(token, factor());
     // atom
     } else if ([TokenType.INT, TokenType.REAL, TokenType.DICE].contains(currentToken.type) || lexer.commaBeforeNextPar()) {
       _debugPrint('Parser.factor() thinks this is an atom');
@@ -99,15 +99,15 @@ class Parser {
     // option 1: (PLUS | MINUS) atom
     if (token.type == TokenType.PLUS) {
       eat(TokenType.PLUS);
-      node = UnaryOpNode(token, atom());
+      node = UnaryOpAstNode(token, atom());
     } else if (token.type == TokenType.MINUS) {
       eat(TokenType.MINUS);
-      node = UnaryOpNode(token, atom());
+      node = UnaryOpAstNode(token, atom());
     }
     // option 2: dice
     else if (token.type == TokenType.DICE) {
       eat(TokenType.DICE);
-      node = DiceNode.fromToken(token);
+      node = DiceAstNode.fromToken(token);
     }
     // option 3: set
     else if (token.type == TokenType.LPAR) {
@@ -117,7 +117,7 @@ class Parser {
       if (currentToken.type == TokenType.RPAR) {
         eat(TokenType.RPAR);
         // the node has no children :(
-        node = SetNode(null, []);
+        node = SetAstNode(null, []);
       }
       // in the else-block, it's everything else
       else {
@@ -136,16 +136,16 @@ class Parser {
         // at the very end, consume a RPAR
         eat(TokenType.RPAR);
         // and return the finished node
-        node = SetNode(null, setChildren);
+        node = SetAstNode(null, setChildren);
       }
     }
     // option 4: literal
     else if (token.type == TokenType.REAL) {
       eat(TokenType.REAL);
-      node = LiteralNode(token);
+      node = LiteralAstNode(token);
     } else if (token.type == TokenType.INT) {
       eat(TokenType.INT);
-      node = LiteralNode(token);
+      node = LiteralAstNode(token);
     }
     _debugPrint(currentToken.toString());
     // (setOp)*
@@ -156,7 +156,7 @@ class Parser {
       eat(TokenType.SETOP_SEL);
       var val = currentToken.value;
       eat(TokenType.INT);
-      node = SetOpNode(node, op, sel, val);
+      node = SetOpAstNode(node, op, sel, val);
     }
 
     return node;
@@ -219,10 +219,10 @@ class Parser {
     var token = currentToken;
     if (token.type == TokenType.INT) {
       eat(TokenType.INT);
-      return LiteralNode(token);
+      return LiteralAstNode(token);
     } else if (token.type == TokenType.REAL) {
       eat(TokenType.REAL);
-      return LiteralNode(token);
+      return LiteralAstNode(token);
     }
   }
 

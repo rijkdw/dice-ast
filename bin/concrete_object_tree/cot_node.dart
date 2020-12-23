@@ -1,5 +1,4 @@
-abstract class CotNode {
-
-  int get total;
-
+class CotNode {
+  int get total => 0;
 }
+

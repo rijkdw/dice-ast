@@ -1,22 +1,25 @@
+import 'cot_node.dart';
 import 'die.dart';
 
-class Dice {
+class Dice extends CotNode {
   int number, size;
   List<Die> die;
 
   Dice(this.number, this.size, this.die);
 
   factory Dice.roll(number, size) {
-    var die = [];
+    var dieList = <Die>[];
     for (var i = 0; i < number; i++) {
-      die.add(Die.roll(size));
+      dieList.add(Die.roll(size));
     }
-    return Dice(number, size, List<Die>.from(die));
+    return Dice(number, size, dieList);
   }
 
   @override
-  String toString() =>
-      'Dice(number=$number, size=$size, die=${die.map((d) => d.toString()).toList()}';
+  int get total => 0; // TODO
+
+  @override
+  String toString() => 'Dice(number=$number, size=$size, die=${die.map((d) => d.toString()).toList()}';
 }
 
 void main() {

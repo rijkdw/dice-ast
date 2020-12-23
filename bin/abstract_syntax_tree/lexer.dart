@@ -189,7 +189,7 @@ class Lexer {
         return Token(TokenType.SETOP_OP, val);
       }
       // set op selector
-      if (['s', 'h', 'l', '>', '<'].contains(currentChar)) {
+      if (['=', 'h', 'l', '>', '<'].contains(currentChar)) {
         var val = currentChar;
         advance();
         return Token(TokenType.SETOP_SEL, val);
