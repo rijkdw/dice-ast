@@ -1,7 +1,6 @@
 import 'die.dart';
-import 'setlike.dart';
 
-class Dice extends SetLike {
+class Dice {
   int number, size;
   List<Die> die;
 

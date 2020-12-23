@@ -1,5 +1,5 @@
 import 'error.dart';
-import 'astnode.dart';
+import 'ast_node.dart';
 
 class NodeVisitor {
   Map<String, Function> functionMap;

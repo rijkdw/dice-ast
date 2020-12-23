@@ -1,4 +1,4 @@
-import 'astnode.dart';
+import 'ast_node.dart';
 import 'lexer.dart';
 import 'token.dart';
 import 'error.dart' as error;
