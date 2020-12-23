@@ -7,12 +7,12 @@ class Interpreter extends NodeVisitor {
 
   Interpreter(this.parser) {
     functionMap = {
-      'visitBinOpAstNode': visitBinOpAstNode,
-      'visitLiteralAstNode': visitLiteralAstNode,
-      'visitUnaryOpAstNode': visitUnaryOpAstNode,
-      'visitSetAstNode': visitSetAstNode,
-      'visitDiceAstNode': visitDiceAstNode,
-      'visitSetOpAstNode': visitSetOpAstNode,
+      'visitBinOpNode': visitBinOpNode,
+      'visitLiteralNode': visitLiteralNode,
+      'visitUnaryOpNode': visitUnaryOpNode,
+      'visitSetNode': visitSetNode,
+      'visitDiceNode': visitDiceNode,
+      'visitSetOpNode': visitSetOpNode,
     };
   }
 
@@ -21,22 +21,22 @@ class Interpreter extends NodeVisitor {
   // ===========================================================================
 
   // TODO
-  dynamic visitBinOpAstNode(BinOpAstNode node) {}
+  dynamic visitBinOpNode(BinOpNode node) {}
 
   // TODO
-  dynamic visitLiteralAstNode(LiteralAstNode node) {}
+  dynamic visitLiteralNode(LiteralNode node) {}
 
   // TODO
-  dynamic visitUnaryOpAstNode(UnaryOpAstNode node) {}
+  dynamic visitUnaryOpNode(UnaryOpNode node) {}
 
   // TODO
-  dynamic visitSetAstNode(SetAstNode node) {}
+  dynamic visitSetNode(SetNode node) {}
 
   // TODO
-  dynamic visitSetOpAstNode(SetOpAstNode node) {}
+  dynamic visitSetOpNode(SetOpNode node) {}
 
   // TODO
-  dynamic visitDiceAstNode(DiceAstNode node) {}
+  dynamic visitDiceNode(DiceNode node) {}
 
   dynamic interpret() {
     var tree = parser.parse();

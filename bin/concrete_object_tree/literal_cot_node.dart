@@ -7,8 +7,8 @@ class LiteralCotNode extends CotNode {
 
   LiteralCotNode(this.value);
 
-  factory LiteralCotNode.fromLiteralAstNode(LiteralAstNode node) {
-    return LiteralCotNode(node.value);
+  factory LiteralCotNode.fromLiteralAstNode(LiteralNode node) {
+    return LiteralCotNode(node.literalValue);
   }
 
   @override

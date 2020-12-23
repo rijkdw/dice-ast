@@ -50,6 +50,12 @@ int countInList(List<dynamic> list, dynamic val, [Function map]) {
   return count;
 }
 
+num sumList(List<num> list) {
+  num sum = 0;
+  list.forEach((v) => sum += v);
+  return sum;
+}
+
 void main() {
   var myStrings = ['a', 'b', 'c'];
   print(join(myStrings, ','));

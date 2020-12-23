@@ -1,7 +1,6 @@
-import 'cot_node.dart';
-import 'die.dart';
+import '../abstract_syntax_tree/die.dart';
 
-class Dice extends CotNode {
+class Dice {
   int number, size;
   List<Die> die;
 
@@ -14,9 +13,6 @@ class Dice extends CotNode {
     }
     return Dice(number, size, dieList);
   }
-
-  @override
-  int get total => 0; // TODO
 
   @override
   String toString() => 'Dice(number=$number, size=$size, die=${die.map((d) => d.toString()).toList()}';

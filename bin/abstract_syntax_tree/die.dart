@@ -1,4 +1,5 @@
 import '../utils.dart';
+import '../state.dart' as state;
 
 class Die {
   int size, value;
@@ -6,6 +7,7 @@ class Die {
   Die(this.size, this.value);
 
   factory Die.roll(int size) {
+    state.addRollAndCheck();
     var value = randInRange(1, size);
     return Die(size, value);
   }

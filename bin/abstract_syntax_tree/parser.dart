@@ -1,7 +1,7 @@
 import 'ast_node.dart';
 import 'lexer.dart';
 import 'token.dart';
-import 'error.dart' as error;
+import '../error.dart' as error;
 
 class Parser {
   Lexer lexer;
@@ -38,7 +38,7 @@ class Parser {
       } else if (token.type == TokenType.MINUS) {
         eat(TokenType.MINUS);
       }
-      node = BinOpAstNode(node, token, term());
+      node = BinOpNode(node, token, term());
     }
     return node;
   }
@@ -56,7 +56,7 @@ class Parser {
       } else if (token.type == TokenType.DIV) {
         eat(TokenType.DIV);
       }
-      node = BinOpAstNode(node, token, factor());
+      node = BinOpNode(node, token, factor());
     }
     return node;
   }
@@ -69,10 +69,10 @@ class Parser {
     // (PLUS|MINUS) factor
     if (currentToken.type == TokenType.PLUS) {
       eat(TokenType.PLUS);
-      return UnaryOpAstNode(token, factor());
+      return UnaryOpNode(token, factor());
     } else if (currentToken.type == TokenType.MINUS) {
       eat(TokenType.MINUS);
-      return UnaryOpAstNode(token, factor());
+      return UnaryOpNode(token, factor());
     // atom
     } else if ([TokenType.INT, TokenType.REAL, TokenType.DICE].contains(currentToken.type) || lexer.commaBeforeNextPar()) {
       _debugPrint('Parser.factor() thinks this is an atom');
@@ -99,15 +99,15 @@ class Parser {
     // option 1: (PLUS | MINUS) atom
     if (token.type == TokenType.PLUS) {
       eat(TokenType.PLUS);
-      node = UnaryOpAstNode(token, atom());
+      node = UnaryOpNode(token, atom());
     } else if (token.type == TokenType.MINUS) {
       eat(TokenType.MINUS);
-      node = UnaryOpAstNode(token, atom());
+      node = UnaryOpNode(token, atom());
     }
     // option 2: dice
     else if (token.type == TokenType.DICE) {
       eat(TokenType.DICE);
-      node = DiceAstNode.fromToken(token);
+      node = DiceNode.fromToken(token);
     }
     // option 3: set
     else if (token.type == TokenType.LPAR) {
@@ -117,7 +117,7 @@ class Parser {
       if (currentToken.type == TokenType.RPAR) {
         eat(TokenType.RPAR);
         // the node has no children :(
-        node = SetAstNode(null, []);
+        node = SetNode(null, []);
       }
       // in the else-block, it's everything else
       else {
@@ -136,16 +136,16 @@ class Parser {
         // at the very end, consume a RPAR
         eat(TokenType.RPAR);
         // and return the finished node
-        node = SetAstNode(null, setChildren);
+        node = SetNode(null, setChildren);
       }
     }
     // option 4: literal
     else if (token.type == TokenType.REAL) {
       eat(TokenType.REAL);
-      node = LiteralAstNode(token);
+      node = LiteralNode(token);
     } else if (token.type == TokenType.INT) {
       eat(TokenType.INT);
-      node = LiteralAstNode(token);
+      node = LiteralNode(token);
     }
     _debugPrint(currentToken.toString());
     // (setOp)*
@@ -156,7 +156,7 @@ class Parser {
       eat(TokenType.SETOP_SEL);
       var val = currentToken.value;
       eat(TokenType.INT);
-      node = SetOpAstNode(node, op, sel, val);
+      node = SetOpNode(node, op, sel, val);
     }
 
     return node;
@@ -210,20 +210,22 @@ class Parser {
     //     return LiteralNode(token);
     // }
     
-    error.raiseError(error.ErrorType.unexpectedEndOfFunction);
+    // error.raiseError(error.ErrorType.unexpectedEndOfFunction);
   }
 
+  // ignore: missing_return
   AstNode literal() {
     _printStatus('literal()');
     // literal   : REAL | INT
     var token = currentToken;
     if (token.type == TokenType.INT) {
       eat(TokenType.INT);
-      return LiteralAstNode(token);
+      return LiteralNode(token);
     } else if (token.type == TokenType.REAL) {
       eat(TokenType.REAL);
-      return LiteralAstNode(token);
+      return LiteralNode(token);
     }
+    error.raiseError(error.ErrorType.unexpectedEndOfFunction);
   }
 
   AstNode parse() {
@@ -278,6 +280,7 @@ void main() {
     '(1, 2+2, 3*2*(2+1), (1, 2, 3), 1d20+3)',
     // sets with set ops
     '(1,2,3)kh1',
+    '2d6'
   ];
   Lexer lexer;
   Parser parser;

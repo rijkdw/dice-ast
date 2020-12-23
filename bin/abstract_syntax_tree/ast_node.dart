@@ -1,11 +1,20 @@
 import '../utils.dart';
-import 'error.dart';
+import 'die.dart';
+import '../error.dart';
 import 'token.dart';
 
 class AstNode {
+
+  // ignore: missing_return
   String visualise() {
     raiseError(ErrorType.notImplemented);
   }
+
+  num get value => 0;
+  // for a binary node, this would = A OP B
+  // for a unary node, this would = OP A
+  // for a dice node, this would be the sum of the results of its rolls
+  // for a literal node, this would be its value
 }
 
 // =============================================================================
@@ -18,11 +27,11 @@ class AstNode {
 // PARENT NODES
 // =============================================================================
 
-class BinOpAstNode extends AstNode {
+class BinOpNode extends AstNode {
   Token token, op;
   AstNode left, right;
 
-  BinOpAstNode(this.left, this.op, this.right) {
+  BinOpNode(this.left, this.op, this.right) {
     token = op;
   }
 
@@ -33,11 +42,11 @@ class BinOpAstNode extends AstNode {
   String visualise() => '(${left.visualise()}${op.value}${right.visualise()})';
 }
 
-class UnaryOpAstNode extends AstNode {
+class UnaryOpNode extends AstNode {
   Token token, op;
   AstNode expr;
 
-  UnaryOpAstNode(this.token, this.expr) {
+  UnaryOpNode(this.token, this.expr) {
     op = token;
   }
 
@@ -48,11 +57,11 @@ class UnaryOpAstNode extends AstNode {
   String visualise() => '${op.value}${expr.visualise()}';
 }
 
-class SetAstNode extends AstNode {
+class SetNode extends AstNode {
   Token token;
   List<AstNode> children;
 
-  SetAstNode(this.token, this.children);
+  SetNode(this.token, this.children);
 
   @override
   String toString() {
@@ -63,59 +72,96 @@ class SetAstNode extends AstNode {
   String visualise() => '[' + join(children.map((c) => c.visualise()).toList(), ', ') + ']';
 }
 
-class SetOpAstNode extends AstNode {
+class SetOpNode extends AstNode {
   String op, sel;
   int val;
   AstNode child;
 
-  SetOpAstNode(this.child, this.op, this.sel, this.val);
+  SetOpNode(this.child, this.op, this.sel, this.val);
 
   @override
   String toString() => 'SetOpNode(op=$op, sel=$sel, val=$val, child=$child)';
 
   @override
   String visualise() => '${child.visualise()}$op$sel$val';
+
+  Type getEventualChildType() {
+    if (child is SetOpNode) {
+      return (child as SetOpNode).getEventualChildType();
+    }
+    return child.runtimeType;
+  }
 }
 
 // =============================================================================
 // LEAF NODES
 // =============================================================================
 
-class LiteralAstNode extends AstNode {
+class LiteralNode extends AstNode {
   Token token;
-  num value;
+  num literalValue;
 
-  LiteralAstNode(this.token) {
-    value = token.value;
+  LiteralNode(this.token) {
+    literalValue = token.value;
   }
 
   @override
-  String toString() => 'LiteralNode(value=$value)';
+  String toString() => 'LiteralNode(value=$literalValue)';
 
   @override
-  String visualise() => '${value}';
+  String visualise() => '${literalValue}';
+
+  @override
+  num get value => literalValue;
 }
 
-class DiceAstNode extends AstNode {
+class DiceNode extends AstNode {
   Token token;
   int number, size;
+  List<Die> die;
 
-  DiceAstNode(this.token, this.number, this.size);
+  DiceNode(this.token, this.number, this.size) {
+    _roll();
+  }
 
-  factory DiceAstNode.fromToken(Token token) {
+  factory DiceNode.fromToken(Token token) {
     var diceRegex = RegExp(r'(\d+)d(\d+)');
     var matches = diceRegex.firstMatch(token.value).groups([1, 2]);
-    return DiceAstNode(token, int.parse(matches.first), int.parse(matches.last));
+    return DiceNode(token, int.parse(matches.first), int.parse(matches.last));
+  }
+
+  _roll() {
+    die = <Die>[];
+    for (var i = 0; i < number; i++) {
+      die.add(Die.roll(size));
+    }
+  }
+
+  _explode(List<int> explodeValues) {
+    for (var i = 0; i < die.length; i++) {
+      var d = die[i];
+      if (explodeValues.contains(d.value)) {
+        // explode
+        var dNew = Die.roll(size);
+        die.insert(i+1, dNew);
+      }
+    }
   }
 
   @override
-  String toString() => 'DiceNode(number=$number, size=$size)';
+  String toString() => 'DiceNode(number=$number, size=$size, die=$die)';
 
   @override
   String visualise() => '${number}d${size}';
+
+  @override
+  int get value => sumList(die.map((d) => d.value).toList());
 }
 
 void main() {
-  var token = Token(TokenType.DICE, '10d3');
-  print(DiceAstNode.fromToken(token));
+  var token = Token(TokenType.DICE, '1d2');
+  var diceNode = DiceNode.fromToken(token);
+  print(diceNode);
+  diceNode._explode([1]);
+  print(diceNode);
 }

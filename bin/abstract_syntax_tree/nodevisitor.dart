@@ -1,4 +1,4 @@
-import 'error.dart';
+import '../error.dart';
 import 'ast_node.dart';
 
 class NodeVisitor {

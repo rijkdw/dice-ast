@@ -1,6 +1,6 @@
 import 'token.dart';
 import '../utils.dart';
-import 'error.dart' as error;
+import '../error.dart' as error;
 
 class Lexer {
   // ATTRIBUTES
