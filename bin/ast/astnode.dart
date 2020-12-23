@@ -1,10 +1,11 @@
 import '../utils.dart';
+import 'error.dart';
 import 'token.dart';
 
-class Node {
-
-  String visualise() {}
-
+class AstNode {
+  String visualise() {
+    raiseError(ErrorType.notImplemented);
+  }
 }
 
 // =============================================================================
@@ -17,9 +18,9 @@ class Node {
 // PARENT NODES
 // =============================================================================
 
-class BinOpNode extends Node {
+class BinOpNode extends AstNode {
   Token token, op;
-  Node left, right;
+  AstNode left, right;
 
   BinOpNode(this.left, this.op, this.right) {
     token = op;
@@ -32,9 +33,9 @@ class BinOpNode extends Node {
   String visualise() => '(${left.visualise()}${op.value}${right.visualise()})';
 }
 
-class UnaryOpNode extends Node {
+class UnaryOpNode extends AstNode {
   Token token, op;
-  Node expr;
+  AstNode expr;
 
   UnaryOpNode(this.token, this.expr) {
     op = token;
@@ -47,9 +48,9 @@ class UnaryOpNode extends Node {
   String visualise() => '${op.value}${expr.visualise()}';
 }
 
-class SetNode extends Node {
+class SetNode extends AstNode {
   Token token;
-  List<Node> children;
+  List<AstNode> children;
 
   SetNode(this.token, this.children);
 
@@ -59,34 +60,28 @@ class SetNode extends Node {
   }
 
   @override
-  String visualise() => '[' + join(children.map((c)=>c.visualise()).toList(), ', ') + ']';
+  String visualise() => '[' + join(children.map((c) => c.visualise()).toList(), ', ') + ']';
 }
 
-class SetOpNode extends Node {
-  // TODO
-  Token token, op;
-  Node setNode; // left
-  Node selectorNode; // right
+class SetOpNode extends AstNode {
+  String op, sel;
+  int val;
+  AstNode child;
 
-  SetOpNode(this.token, this.setNode, this.selectorNode) {
-    op = token;
-  }
-}
+  SetOpNode(this.child, this.op, this.sel, this.val);
 
-class SelectorNode extends Node {
-  // TODO
-  // examples:  h3
-  Token token;
-  int value;
+  @override
+  String toString() => 'SetOpNode(op=$op, sel=$sel, val=$val, child=$child)';
 
-  SelectorNode(this.token, this.value);
+  @override
+  String visualise() => '${child.visualise()}$op$sel$val';
 }
 
 // =============================================================================
 // LEAF NODES
 // =============================================================================
 
-class LiteralNode extends Node {
+class LiteralNode extends AstNode {
   Token token;
   dynamic value;
 
@@ -101,7 +96,7 @@ class LiteralNode extends Node {
   String visualise() => '${value}';
 }
 
-class DiceNode extends Node {
+class DiceNode extends AstNode {
   Token token;
   int number, size;
 

@@ -11,15 +11,10 @@ enum TokenType {
   EOF,
   // primitives
   DICE, // 1d4, 2d6, 10d8
-  SET, // (), (1,), (1,2,3), (1d4,3+3,1d20)
+  // SET, // (), (1,), (1,2,3), (1d4,3+3,1d20)
   // set operations
-  KEEP, // k
-  DROP, // p
-  EXPLODE, // e
-  // set operation selectors
-  EXACTLY, // s
-  HIGHEST, // h
-  LOWEST, // l
+  SETOP_OP,
+  SETOP_SEL,
   // binary operators
   PLUS, // +
   MINUS, // -

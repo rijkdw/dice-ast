@@ -1,4 +1,4 @@
-import 'node.dart';
+import 'astnode.dart';
 import 'nodevisitor.dart';
 import 'parser.dart';
 

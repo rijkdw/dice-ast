@@ -182,20 +182,17 @@ class Lexer {
       //   advance();
       //   return Token(TokenType.DICESEP, 'd');
       // }
-      // keep
-      if (currentChar == 'k') {
+      // set op operation
+      if (['e', 'k', 'p'].contains(currentChar)) {
+        var val = currentChar;
         advance();
-        return Token(TokenType.KEEP, 'k');
+        return Token(TokenType.SETOP_OP, val);
       }
-      // drop
-      if (currentChar == 'p') {
+      // set op selector
+      if (['s', 'h', 'l', '>', '<'].contains(currentChar)) {
+        var val = currentChar;
         advance();
-        return Token(TokenType.DROP, 'p');
-      }
-      // explode
-      if (currentChar == 'e') {
-        advance();
-        return Token(TokenType.EXPLODE, 'e');
+        return Token(TokenType.SETOP_SEL, val);
       }
       // if nothing matches, it's unrecognised and a syntax error is raised
       error.raiseError(error.ErrorType.invalidSyntax);
@@ -207,7 +204,7 @@ class Lexer {
 
 void main() {
   Lexer lexer;
-  var texts = ['1d4', '1.5', '7', '(1, 2, 3)', '4+4d4+1'];
+  var texts = ['1d4', '1.5', '7', '(1, 2, 3)', '4+4d4+1', '4d6kh3'];
   for (var text in texts) {
     lexer = Lexer(text);
     print(text);

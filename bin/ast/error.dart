@@ -3,6 +3,7 @@ enum ErrorType {
   unexpectedEndOfFunction,
   eatError,
   noVisitNodeMethod,
+  notImplemented,
 }
 
 String errorToString(ErrorType errorType) {
@@ -11,6 +12,7 @@ String errorToString(ErrorType errorType) {
     ErrorType.unexpectedEndOfFunction: 'Unexpected end of function',
     ErrorType.eatError: 'Eat error',
     ErrorType.noVisitNodeMethod: 'No \"visit node\" method',
+    ErrorType.notImplemented: 'Method not implemented'
   }[errorType];
 }
 
