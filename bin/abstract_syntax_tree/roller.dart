@@ -9,11 +9,13 @@ class Roller {
     var parser = Parser(lexer);
     var interpreter = Interpreter(parser);
     var tree = interpreter.interpret();
-    return Result(tree);
+    return Result(expression, tree);
   }
 }
 
 void main() {
   var result = Roller.roll('4d6kh3');
   print(result);
+  var die = result.die;
+  print(die);
 }

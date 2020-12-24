@@ -36,7 +36,7 @@ class Interpreter extends NodeVisitor {
   dynamic visitLiteralNode(LiteralNode node) {}
 
   dynamic visitUnaryOpNode(UnaryOpNode node) {
-    visit(node.expr);
+    visit(node.child);
   }
 
   dynamic visitSetNode(SetNode node) {
@@ -45,7 +45,6 @@ class Interpreter extends NodeVisitor {
     }
   }
 
-  // TODO
   dynamic visitSetOpNode(SetOpNode node) {
     _debugPrint('\n!! Reached $node');
     var eventualChild = node.getEventualChild();
@@ -69,7 +68,9 @@ class Interpreter extends NodeVisitor {
     visit(node.child);
   }
 
-  dynamic visitDiceNode(DiceNode node) {}
+  dynamic visitDiceNode(DiceNode node) {
+    node.roll();
+  }
 
   AstNode interpret() {
     var tree = parser.parse();
@@ -79,11 +80,12 @@ class Interpreter extends NodeVisitor {
 }
 
 void main() {
-  var lexer = Lexer('1d2e=2');
+  var lexer = Lexer('2d20kh1+3');
   var parser = Parser(lexer);
   var interpreter = Interpreter(parser, verbose: true);
   var tree = interpreter.parser.parse();
   print('Tree before interpretation:\n$tree');
   interpreter.visit(tree);
   print('Tree after interpretation:\n$tree');
+  print(tree.value);
 }

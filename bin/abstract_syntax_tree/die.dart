@@ -2,18 +2,23 @@ import '../utils.dart';
 import '../state.dart' as state;
 
 class Die {
-  int size, value;
+  int size;
+  List<int> values;
 
-  Die(this.size, this.value);
+  Die(this.size);
 
   factory Die.roll(int size) {
     state.addRollAndCheck();
     var value = randInRange(1, size);
-    return Die(size, value);
+    var die = Die(size);
+    die.values = [value];
+    return die;
   }
 
+  int get value => values.last;
+
   @override
-  String toString() => 'Die(size=$size, value=$value)';
+  String toString() => 'Die(size=$size, values=$values)';
 }
 
 void main() {
