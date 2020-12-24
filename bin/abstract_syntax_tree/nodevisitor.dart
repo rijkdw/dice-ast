@@ -3,11 +3,12 @@ import 'ast_node.dart';
 
 class NodeVisitor {
   Map<String, Function> functionMap;
+  AstNode previouslyVisitedNode;
 
-  dynamic visit(AstNode node) {
+  void visit(AstNode node) {
     var functionName = 'visit${node.runtimeType}';
     var function = functionMap[functionName] ?? genericVisit;
-    return function(node);
+    function(node);
   }
 
   void genericVisit(AstNode node) {

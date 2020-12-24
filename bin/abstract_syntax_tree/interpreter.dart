@@ -1,11 +1,13 @@
 import 'ast_node.dart';
+import 'lexer.dart';
 import 'nodevisitor.dart';
 import 'parser.dart';
 
 class Interpreter extends NodeVisitor {
   Parser parser;
+  bool verbose;
 
-  Interpreter(this.parser) {
+  Interpreter(this.parser, {this.verbose=false}) {
     functionMap = {
       'visitBinOpNode': visitBinOpNode,
       'visitLiteralNode': visitLiteralNode,
@@ -16,30 +18,72 @@ class Interpreter extends NodeVisitor {
     };
   }
 
+  void _debugPrint(dynamic msg) {
+    if (verbose) {
+      print('$msg');
+    }
+  }
+
   // ===========================================================================
   // VISIT NODE METHODS
   // ===========================================================================
 
-  // TODO
-  dynamic visitBinOpNode(BinOpNode node) {}
+  dynamic visitBinOpNode(BinOpNode node) {
+    visit(node.left);
+    visit(node.right);
+  }
 
-  // TODO
   dynamic visitLiteralNode(LiteralNode node) {}
 
-  // TODO
-  dynamic visitUnaryOpNode(UnaryOpNode node) {}
+  dynamic visitUnaryOpNode(UnaryOpNode node) {
+    visit(node.expr);
+  }
+
+  dynamic visitSetNode(SetNode node) {
+    for (var child in node.children) {
+      visit(child);
+    }
+  }
 
   // TODO
-  dynamic visitSetNode(SetNode node) {}
+  dynamic visitSetOpNode(SetOpNode node) {
+    _debugPrint('\n!! Reached $node');
+    var eventualChild = node.getEventualChild();
+    _debugPrint('Type of eventual child is ${eventualChild.runtimeType}\n');
 
-  // TODO
-  dynamic visitSetOpNode(SetOpNode node) {}
 
-  // TODO
+    // 1.  ~~The SetOpNode must be removed from the tree.~~
+    // It doesn't have to be removed (it's actually quite tricky to remove it),
+    // it can simply be ignored.
+
+    // 2. Its SetOp must be given to the eventual child that isn't a SetOpNode.
+    // SetOps can only be given to DiceNodes and SetNodes.
+    if (eventualChild is DiceNode) {
+      eventualChild.addSetOp(node.setOp);
+    }
+    if (eventualChild is SetNode) {
+      eventualChild.addSetOp(node.setOp);
+    }
+
+    // visit child
+    visit(node.child);
+  }
+
   dynamic visitDiceNode(DiceNode node) {}
 
-  dynamic interpret() {
+  AstNode interpret() {
     var tree = parser.parse();
-    return visit(tree);
+    visit(tree);
+    return tree;
   }
+}
+
+void main() {
+  var lexer = Lexer('1d2e=2');
+  var parser = Parser(lexer);
+  var interpreter = Interpreter(parser, verbose: true);
+  var tree = interpreter.parser.parse();
+  print('Tree before interpretation:\n$tree');
+  interpreter.visit(tree);
+  print('Tree after interpretation:\n$tree');
 }

@@ -1,6 +1,7 @@
 import '../utils.dart';
 import 'die.dart';
 import '../error.dart';
+import 'setop.dart';
 import 'token.dart';
 
 class AstNode {
@@ -16,12 +17,6 @@ class AstNode {
   // for a dice node, this would be the sum of the results of its rolls
   // for a literal node, this would be its value
 }
-
-// =============================================================================
-// MIXINS
-// =============================================================================
-
-// TODO?
 
 // =============================================================================
 // PARENT NODES
@@ -40,6 +35,23 @@ class BinOpNode extends AstNode {
 
   @override
   String visualise() => '(${left.visualise()}${op.value}${right.visualise()})';
+
+  @override
+  num get value {
+    if (op.type == TokenType.PLUS) {
+      return left.value + right.value;
+    }
+    if (op.type == TokenType.MINUS) {
+      return left.value - right.value;
+    }
+    if (op.type == TokenType.MUL) {
+      return left.value * right.value;
+    }
+    if (op.type == TokenType.DIV) {
+      return left.value / right.value;
+    }
+    return 0;
+  }
 }
 
 class UnaryOpNode extends AstNode {
@@ -55,21 +67,45 @@ class UnaryOpNode extends AstNode {
 
   @override
   String visualise() => '${op.value}${expr.visualise()}';
+
+  @override
+  num get value {
+    if (op.type == TokenType.PLUS) {
+      return expr.value;
+    }
+    if (op.type == TokenType.MINUS) {
+      return -expr.value;
+    }
+    return 0;
+  }
 }
 
 class SetNode extends AstNode {
   Token token;
   List<AstNode> children;
+  List<SetOp> setOps;
 
-  SetNode(this.token, this.children);
+  SetNode(this.token, this.children) {
+    setOps = [];
+  }
 
   @override
   String toString() {
-    return 'SetNode(children=$children)';
+    return 'SetNode(children=$children, setOps=$setOps)';
   }
 
   @override
   String visualise() => '[' + join(children.map((c) => c.visualise()).toList(), ', ') + ']';
+
+  @override
+  num get value => sumList(children.map((child) => child.value).toList());
+
+  // set operators
+
+  void addSetOp(SetOp setOp) {
+    setOps.add(setOp);
+  }
+
 }
 
 class SetOpNode extends AstNode {
@@ -85,12 +121,20 @@ class SetOpNode extends AstNode {
   @override
   String visualise() => '${child.visualise()}$op$sel$val';
 
-  Type getEventualChildType() {
+  AstNode getEventualChild() {
     if (child is SetOpNode) {
-      return (child as SetOpNode).getEventualChildType();
+      return (child as SetOpNode).getEventualChild();
     }
-    return child.runtimeType;
+    return child;
   }
+
+  SetOp get setOp => SetOp(op, sel, val);
+}
+
+class RootNode extends AstNode {
+  AstNode node;
+
+  RootNode(this.node);
 }
 
 // =============================================================================
@@ -119,8 +163,10 @@ class DiceNode extends AstNode {
   Token token;
   int number, size;
   List<Die> die;
+  List<SetOp> setOps;
 
   DiceNode(this.token, this.number, this.size) {
+    setOps = [];
     _roll();
   }
 
@@ -130,14 +176,14 @@ class DiceNode extends AstNode {
     return DiceNode(token, int.parse(matches.first), int.parse(matches.last));
   }
 
-  _roll() {
+  void _roll() {
     die = <Die>[];
     for (var i = 0; i < number; i++) {
       die.add(Die.roll(size));
     }
   }
 
-  _explode(List<int> explodeValues) {
+  void _explode(List<int> explodeValues) {
     for (var i = 0; i < die.length; i++) {
       var d = die[i];
       if (explodeValues.contains(d.value)) {
@@ -148,8 +194,14 @@ class DiceNode extends AstNode {
     }
   }
 
+  // set operators
+
+  void addSetOp(SetOp setOp) {
+    setOps.add(setOp);
+  }
+
   @override
-  String toString() => 'DiceNode(number=$number, size=$size, die=$die)';
+  String toString() => 'DiceNode(number=$number, size=$size, die=$die, setOps=$setOps)';
 
   @override
   String visualise() => '${number}d${size}';
