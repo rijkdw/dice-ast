@@ -1,9 +1,7 @@
-import 'abstract_syntax_tree/lexer.dart';
-import 'abstract_syntax_tree/parser.dart';
+import 'abstract_syntax_tree/roller.dart';
 
 void main() {
-  var lexer = Lexer('3+(3*2)+1d4');
-  var parser = Parser(lexer);
-  var result = parser.parse().value;
+  var result = Roller.roll('4d6k>3');
   print(result);
+  print(result.total);
 }

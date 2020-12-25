@@ -1,3 +1,6 @@
+import 'ast_node.dart';
+import 'die.dart';
+
 class SetOp {
 
   String op, sel;
@@ -9,6 +12,38 @@ class SetOp {
   String toString() => 'SetOp(op=\"$op\", sel=\"$sel\", val=$val)';
 
   bool get isValid => !(['n', 'x'].contains(op) && ['>', '<', 'h', 'l'].contains(sel));
+
+  void applyKeepDropToDie(Die die) {
+    var selToConditional = {
+      '>': (Die die) => die.value > val,
+      '<': (Die die) => die.value < val,
+      '=': (Die die) => die.value == val,
+    };
+    // if keeping, discard those which don't meet condition
+    if (op == 'k' && !selToConditional[sel](die)) {
+      die.discard();
+    }
+    // if dropping, discard those which meet condition
+    if (op == 'p' && selToConditional[sel](die)) {
+      die.discard();
+    }
+  }
+
+  void applyKeepDropToLiteral(LiteralNode literal) {
+    var selToConditional = {
+      '>': () => literal.value > val,
+      '<': (LiteralNode literal) => literal.value < val,
+      '=': (LiteralNode literal) => literal.value == val,
+    };
+    // if keeping, discard those which don't meet condition
+    if (op == 'k' && !selToConditional[sel](literal)) {
+      literal.discard();
+    }
+    // if dropping, discard those which meet condition
+    if (op == 'p' && selToConditional[sel](literal)) {
+      literal.discard();
+    }
+  }
 
   // static methods
 

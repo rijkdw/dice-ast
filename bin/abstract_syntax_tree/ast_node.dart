@@ -141,6 +141,9 @@ class SetOpNode extends AstNode {
   @override
   List<Die> get die => child.die;
 
+  @override
+  int get value => child.value;
+
   AstNode getEventualChild() {
     if (child is SetOpNode) {
       return (child as SetOpNode).getEventualChild();
@@ -160,22 +163,30 @@ class SetOpNode extends AstNode {
 class LiteralNode extends AstNode {
   Token token;
   num literalValue;
+  bool kept = true;
 
   LiteralNode(this.token) {
     literalValue = token.value;
   }
 
   @override
-  String toString() => 'LiteralNode(value=$literalValue)';
+  String toString() {
+    var output = 'LiteralNode(value=$literalValue';
+    output += kept ? '' : ', --discarded';
+    output += ')';
+    return output;
+  }
 
   @override
   String visualise() => '${literalValue}';
 
   @override
-  num get value => literalValue;
+  num get value => kept ? literalValue : 0;
 
   @override
   List<Die> get die => <Die>[];
+
+  void discard() => kept = false;
 }
 
 
@@ -216,6 +227,7 @@ class DiceNode extends AstNode {
     for (var i = 0; i < number; i++) {
       _die.add(_rollAnother());
     }
+    print('Die: $_die');
 
     // apply setops
     for (var i = 0; i < setOps.length; i++) {
@@ -264,28 +276,36 @@ class DiceNode extends AstNode {
       }
 
       // if operator is keep (k) or drop (p)
-      // [3, 3]kh1 must be [3], so program must keep track of what has been removed
-      // [3, 3]kh1 = [3, 3]ph1 = [3, 3]kl1  = [3, 3]pl1 = [3]
       if (['k', 'p'].contains(setOp.op)) {
-        List<int> setOpValues;
-        if (setOp.op == 'k') {
-          // discard the values not selected => keep the die in the inverted selection
-          setOpValues = List<int>.from(listSubtraction(_keptDieValues, _getSetOpValues(setOp)));
-          // print('k\'s setOpValues = $setOpValues');
-        } else {
-          // discard the selected values, keep the others
-          setOpValues = _getSetOpValues(setOp);
-          // print('p\'s setOpValues = $setOpValues');
-        }
-        for (var setOpValue in setOpValues) {
-          // print('Checking setOpValue=$setOpValue');
-          var aDiceHasBeenDiscarded = false;
-          for (var d in _die) {
-            if (d.kept && d.value == setOpValue && !aDiceHasBeenDiscarded) {
-              // print('Discarding $d');
-              d.discard();
-              aDiceHasBeenDiscarded = true;
+        // [3, 3]kh1 must be [3], so program must keep track of what has been removed
+        // [3, 3]kh1 = [3, 3]ph1 = [3, 3]kl1  = [3, 3]pl1 = [3]
+        if (['h', 'l'].contains(setOp.sel) || setOp.op == 'p') {
+          List<int> setOpValues;
+          if (setOp.op == 'k') {
+            // discard the values not selected => keep the die in the inverted selection
+            setOpValues = List<int>.from(listSubtraction(_keptDieValues, _getSetOpValues(setOp)));
+            print('k\'s setOpValues = $setOpValues');
+          } else {
+            // discard the selected values, keep the others
+            setOpValues = _getSetOpValues(setOp);
+            // print('p\'s setOpValues = $setOpValues');
+          }
+          for (var setOpValue in setOpValues) {
+            // print('Checking setOpValue=$setOpValue');
+            var aDiceHasBeenDiscarded = false;
+            for (var d in _die) {
+              if (d.kept && d.value == setOpValue && !aDiceHasBeenDiscarded) {
+                // print('Discarding $d');
+                d.discard();
+                aDiceHasBeenDiscarded = true;
+              }
             }
+          }
+        }
+        // other selectors
+        else {
+          for (var d in _die) {
+            setOp.applyKeepDropToDie(d);
           }
         }
       }
@@ -324,15 +344,15 @@ class DiceNode extends AstNode {
     return [];
   }
 
-  // List<int> _invertSetOpValues(List<int> setOpValues) {
-  //   var outList = <int>[];
-  //   for (var i = 1; i < _maxDieValue+1; i++) {
-  //     if (!setOpValues.contains(i)) {
-  //       outList.add(i);
-  //     }
-  //   }
-  //   return outList;
-  // }
+  List<int> _invertSetOpValues(List<int> setOpValues) {
+    var outList = <int>[];
+    for (var i = 1; i < _maxDieValue+1; i++) {
+      if (!setOpValues.contains(i)) {
+        outList.add(i);
+      }
+    }
+    return outList;
+  }
 
   int get _maxDieValue => size;
   int get _minDieValue => 1;
@@ -369,7 +389,8 @@ class DiceNode extends AstNode {
 void main() {
   var token = Token(TokenType.DICE, '3d20');
   var diceNode = DiceNode.fromToken(token);
-  diceNode.addSetOp(SetOp('k', '>', 11));
+  diceNode.addSetOp(SetOp('k', 'h', 2));
+  diceNode.addSetOp(SetOp('k', 'l', 1));
   print(diceNode);
   diceNode.evaluate();
   print(diceNode);
