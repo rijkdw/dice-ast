@@ -227,17 +227,18 @@ class DiceNode extends AstNode {
     for (var i = 0; i < number; i++) {
       _die.add(_rollAnother());
     }
-    print('Die: $_die');
+    // print('Die: $_die');
 
     // apply setops
     for (var i = 0; i < setOps.length; i++) {
-      var setOp = setOps[i];
+      var setOp = setOps.reversed.toList()[i];
 
       // check if setOp is valid - if not, skip it
       if (!setOp.isValid) {
         continue;
       }
       print('Looking at $setOp');
+      print('Current state $_die');
 
       // if an (e | r) operator, merge with following matching operators
       if (['e', 'r'].contains(setOp.op)) {
@@ -275,6 +276,8 @@ class DiceNode extends AstNode {
         }
       }
 
+      // TODO:  reroll once, reroll & add
+
       // if operator is keep (k) or drop (p)
       if (['k', 'p'].contains(setOp.op)) {
         // [3, 3]kh1 must be [3], so program must keep track of what has been removed
@@ -284,7 +287,7 @@ class DiceNode extends AstNode {
           if (setOp.op == 'k') {
             // discard the values not selected => keep the die in the inverted selection
             setOpValues = List<int>.from(listSubtraction(_keptDieValues, _getSetOpValues(setOp)));
-            print('k\'s setOpValues = $setOpValues');
+            // print('k\'s setOpValues = $setOpValues');
           } else {
             // discard the selected values, keep the others
             setOpValues = _getSetOpValues(setOp);
@@ -306,6 +309,24 @@ class DiceNode extends AstNode {
         else {
           for (var d in _die) {
             setOp.applyKeepDropToDie(d);
+          }
+        }
+      }
+
+      // min / max operator
+      if (setOp.op == 'n') {
+        for (var d in _die) {
+          print('min considering die $d');
+          if (d.kept && d.value < setOp.val) {
+            print('Overwritten');
+            d.value = setOp.val;
+          }
+        }
+      }
+      if (setOp.op == 'x') {
+        for (var d in _die) {
+          if (d.kept && d.value > setOp.val) {
+            d.value = setOp.val;
           }
         }
       }
@@ -389,8 +410,8 @@ class DiceNode extends AstNode {
 void main() {
   var token = Token(TokenType.DICE, '3d20');
   var diceNode = DiceNode.fromToken(token);
-  diceNode.addSetOp(SetOp('k', 'h', 2));
-  diceNode.addSetOp(SetOp('k', 'l', 1));
+  diceNode.addSetOp(SetOp('n', '=', 10));
+  diceNode.addSetOp(SetOp('k', '=', 10));
   print(diceNode);
   diceNode.evaluate();
   print(diceNode);

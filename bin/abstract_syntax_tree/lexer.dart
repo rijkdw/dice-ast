@@ -183,7 +183,7 @@ class Lexer {
       //   return Token(TokenType.DICESEP, 'd');
       // }
       // set op operation
-      if (['e', 'k', 'p'].contains(currentChar)) {
+      if (['e', 'k', 'p', 'r', 'n', 'x'].contains(currentChar)) {
         var val = currentChar;
         advance();
         return Token(TokenType.SETOP_OP, val);
