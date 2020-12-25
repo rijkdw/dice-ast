@@ -56,10 +56,51 @@ num sumList(List<num> list) {
   return sum;
 }
 
+List<int> makeList(num min, num max) {
+  /// Return a [List<int>] containing all int values in the range [min, max],
+  /// including both values.
+  if (min > max) {
+    return <int>[];
+  }
+  if (min == max) {
+    return [min];
+  }
+  var length = max-min+1;
+  return List.generate(length, (i) => min+i);
+}
+
+List<dynamic> sublist(List<dynamic> inList, int start, int end) {
+  if (inList.length-1 < end) {
+    throw Exception('List with length=${inList.length} (last index=${inList.length-1}) cannot be sublisted as [$start, $end]');
+  }
+  var outList = <dynamic>[];
+  for (var i = 0; i < inList.length; i++) {
+    if (i >= start && i <= end) {
+      outList.add(inList[i]);
+    }
+  }
+  return outList;
+}
+
+List<dynamic> listSubtraction(List<dynamic> listA, List<dynamic> listB) {
+  // A = [1, 1, 2, 3]
+  // B = [1, 3]
+  // A-B = [1, 2]
+  var listC = List<int>.from(listA);
+  for (var i = 0; i < listB.length; i++) {
+    var b = listB[i];
+    listC.remove(b);
+  }
+  return listC;
+}
+
 void main() {
   var myStrings = ['a', 'b', 'c'];
   print(join(myStrings, ','));
   print(join(myStrings, '-'));
   print(wrapWith('hey', "'"));
   print(wrapWith('hey', '(', ')'));
+  print(makeList(3, 6));
+  print(makeList(6, 6));
+  print(listSubtraction([1, 1, 2, 3, 4, 4, 5], [1, 3, 4, 5, 6]));
 }

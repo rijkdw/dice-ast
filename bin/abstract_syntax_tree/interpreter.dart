@@ -46,10 +46,9 @@ class Interpreter extends NodeVisitor {
   }
 
   dynamic visitSetOpNode(SetOpNode node) {
-    _debugPrint('\n!! Reached $node');
+    _debugPrint('!! Reached $node');
     var eventualChild = node.getEventualChild();
     _debugPrint('Type of eventual child is ${eventualChild.runtimeType}\n');
-
 
     // 1.  ~~The SetOpNode must be removed from the tree.~~
     // It doesn't have to be removed (it's actually quite tricky to remove it),
@@ -69,7 +68,7 @@ class Interpreter extends NodeVisitor {
   }
 
   dynamic visitDiceNode(DiceNode node) {
-    node.roll();
+    node.evaluate();
   }
 
   AstNode interpret() {
@@ -80,7 +79,7 @@ class Interpreter extends NodeVisitor {
 }
 
 void main() {
-  var lexer = Lexer('2d20kh1+3');
+  var lexer = Lexer('2d20kh1e=1kh3+3');
   var parser = Parser(lexer);
   var interpreter = Interpreter(parser, verbose: true);
   var tree = interpreter.parser.parse();

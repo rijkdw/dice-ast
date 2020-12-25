@@ -178,6 +178,7 @@ class LiteralNode extends AstNode {
   List<Die> get die => <Die>[];
 }
 
+
 class DiceNode extends AstNode {
   Token token;
   int number, size;
@@ -195,12 +196,146 @@ class DiceNode extends AstNode {
     return DiceNode(token, int.parse(matches.first), int.parse(matches.last));
   }
 
-  void roll() {
+  void evaluate() {
+    // operators:
+    // k, p:      mark Die as unkept, as appropriate by selector
+    // e:         mark Die as exploded and roll another die
+    // r, o, a:   reroll Die...
+      // r        reroll Die infinitely, discard original
+      // o        reroll Die once, discard original
+      // a        reroll Die once, keep original
+    // n, x:      overwrite Die value with V if smaller / larger than V
+
+    // selectors:
+    // h, l:      require access to full values
+    // s, >, <    do not require access to full values
+
+    // invalid selectors for operators:
+    // n, x:      >, <, h, l
     _die = <Die>[];
     for (var i = 0; i < number; i++) {
-      _die.add(Die.roll(size));
+      _die.add(_rollAnother());
+    }
+
+    // apply setops
+    for (var i = 0; i < setOps.length; i++) {
+      var setOp = setOps[i];
+
+      // check if setOp is valid - if not, skip it
+      if (!setOp.isValid) {
+        continue;
+      }
+      print('Looking at $setOp');
+
+      // if an (e | r) operator, merge with following matching operators
+      if (['e', 'r'].contains(setOp.op)) {
+        var setOpValues = _getSetOpValues(setOp);
+        var lookahead = i+1;
+        while (lookahead < setOps.length && setOp.op == setOps[lookahead].op) {
+          setOpValues.addAll(_getSetOpValues(setOps[lookahead]));
+          lookahead++;
+          i++;  // so that this setOp is unused in the next round of the outer for-loop
+        }
+        setOpValues = setOpValues.toSet().toList();
+        // print('Merged values = $setOpValues');
+
+        // explode / reroll with these merged values
+        for (var j = 0; j < _die.length; j++) {
+          // if it's an explode operator
+          if (setOp.op == 'e') {
+            while (setOpValues.contains(_die[j].value) && _die[j].kept) {
+              _die[j].exploded = true;
+              var newDie = _rollAnother();
+              _die.insert(j+1, newDie);
+              j++;
+            } 
+          }
+          // if it's a reroll operator
+          if (setOp.op == 'r') {
+            while (setOpValues.contains(_die[j].value) && _die[j].kept) {
+              _die[j].rerolled = true;
+              _die[j].discard();
+              var newDie = _rollAnother();
+              _die.insert(j+1, newDie);
+              j++;
+            }
+          }
+        }
+      }
+
+      // if operator is keep (k) or drop (p)
+      // [3, 3]kh1 must be [3], so program must keep track of what has been removed
+      // [3, 3]kh1 = [3, 3]ph1 = [3, 3]kl1  = [3, 3]pl1 = [3]
+      if (['k', 'p'].contains(setOp.op)) {
+        List<int> setOpValues;
+        if (setOp.op == 'k') {
+          // discard the values not selected => keep the die in the inverted selection
+          setOpValues = List<int>.from(listSubtraction(_keptDieValues, _getSetOpValues(setOp)));
+          // print('k\'s setOpValues = $setOpValues');
+        } else {
+          // discard the selected values, keep the others
+          setOpValues = _getSetOpValues(setOp);
+          // print('p\'s setOpValues = $setOpValues');
+        }
+        for (var setOpValue in setOpValues) {
+          // print('Checking setOpValue=$setOpValue');
+          var aDiceHasBeenDiscarded = false;
+          for (var d in _die) {
+            if (d.kept && d.value == setOpValue && !aDiceHasBeenDiscarded) {
+              // print('Discarding $d');
+              d.discard();
+              aDiceHasBeenDiscarded = true;
+            }
+          }
+        }
+      }
     }
   }
+
+  Die _rollAnother() {
+    return Die.roll(size);
+  }
+
+  List<int> _getSetOpValues(SetOp setOp) {
+    // if the selector is >X, then make a list [X+1 -> MAX]
+    if (setOp.sel == '>') {
+      return makeList(setOp.val+1, _maxDieValue);
+    }
+    // if the selector is <X, then make a list [MIN -> X-1]
+    if (setOp.sel == '<') {
+      return makeList(_minDieValue, setOp.val-1);
+    }
+    // if the selector is =X, then make a list [X]
+    if (setOp.sel == '=') {
+      return <int>[setOp.val];
+    }
+    // if the selector is hX, then make a list of highest X values
+    if (setOp.sel == 'h') {
+      var dieValuesSorted = _keptDieValues;
+      dieValuesSorted.sort();
+      return List<int>.from(sublist(dieValuesSorted.reversed.toList(), 0, setOp.val-1));
+    }
+    // if the selector is lX, then make a list of lowest X values
+    if (setOp.sel == 'l') {
+      var dieValuesSorted = _keptDieValues;
+      dieValuesSorted.sort();
+      return List<int>.from(sublist(dieValuesSorted, 0, setOp.val-1));
+    }
+    return [];
+  }
+
+  // List<int> _invertSetOpValues(List<int> setOpValues) {
+  //   var outList = <int>[];
+  //   for (var i = 1; i < _maxDieValue+1; i++) {
+  //     if (!setOpValues.contains(i)) {
+  //       outList.add(i);
+  //     }
+  //   }
+  //   return outList;
+  // }
+
+  int get _maxDieValue => size;
+  int get _minDieValue => 1;
 
   // set operators
 
@@ -215,14 +350,28 @@ class DiceNode extends AstNode {
   String visualise() => '${number}d${size}';
 
   @override
-  int get value => sumList(_die.map((d) => d.value).toList());
+  int get value => sumList(_keptDieValues);
+
+  List<int> get _keptDieValues {
+    var outList = <int>[];
+    for (var d in _die) {
+      if (d.kept) {
+        outList.add(d.value);
+      }
+    }
+    return outList;
+  }
 
   @override
   List<Die> get die => _die;
 }
 
 void main() {
-  var token = Token(TokenType.DICE, '1d2');
+  var token = Token(TokenType.DICE, '3d20');
   var diceNode = DiceNode.fromToken(token);
+  diceNode.addSetOp(SetOp('k', '>', 11));
   print(diceNode);
+  diceNode.evaluate();
+  print(diceNode);
+  print(diceNode.value);
 }

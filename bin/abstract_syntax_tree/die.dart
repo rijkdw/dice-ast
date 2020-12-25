@@ -3,22 +3,40 @@ import '../state.dart' as state;
 
 class Die {
   int size;
-  List<int> values;
+  int _myValue;
+  bool exploded = false;
+  bool kept = true;
+  bool rerolled = false;
+  int _originalValue;
 
-  Die(this.size);
+  Die(this.size, this._myValue) {
+    _originalValue = _myValue;
+  }
 
   factory Die.roll(int size) {
     state.addRollAndCheck();
     var value = randInRange(1, size);
-    var die = Die(size);
-    die.values = [value];
-    return die;
+    return Die(size, value);
   }
 
-  int get value => values.last;
+  int get value => _myValue;
+  set value(newValue) => _myValue = newValue;
+
+  void explode() => exploded = true;
+  void discard() => kept = false;
+
+  bool get isOverwritten => _myValue != _originalValue;
 
   @override
-  String toString() => 'Die(size=$size, values=$values)';
+  String toString() {
+    var output = 'Die(size=$size, value=$_myValue';
+    output += kept ? '' : ', --discarded';
+    output += exploded ? ', --exploded' : '';
+    output += isOverwritten ? ', --overwritten, originalValue=$_originalValue' : '';
+    output += rerolled ? ', --rerolled, originalValue=$_originalValue' : '';
+    output += ')';
+    return output;
+  }
 }
 
 void main() {

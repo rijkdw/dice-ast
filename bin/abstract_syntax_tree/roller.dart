@@ -2,9 +2,11 @@ import 'interpreter.dart';
 import 'lexer.dart';
 import 'parser.dart';
 import 'result.dart';
+import '../state.dart' as state;
 
 class Roller {
   static Result roll(String expression) {
+    state.numRollsMade = 0;
     var lexer = Lexer(expression);
     var parser = Parser(lexer);
     var interpreter = Interpreter(parser);
