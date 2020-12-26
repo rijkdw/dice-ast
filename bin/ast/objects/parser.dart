@@ -1,10 +1,13 @@
+import '../../utils.dart';
 import '../nodes/binop.dart';
 import '../nodes/dice.dart';
 import '../nodes/literal.dart';
 import '../nodes/node.dart';
 import '../nodes/set.dart';
+import '../nodes/setlike.dart';
 import '../nodes/unop.dart';
 import 'lexer.dart';
+import 'setop.dart';
 import 'token.dart';
 import '../../error.dart' as error;
 
@@ -161,7 +164,10 @@ class Parser {
       eat(TokenType.SETOP_SEL);
       var val = currentToken.value;
       eat(TokenType.INT);
-      // TODO add the setop to the node if it is SetLike
+      var setOp = SetOp(op, sel, val);
+      if (node is SetLike) {
+        node.addSetOp(setOp);
+      }
     }
 
     return node;
@@ -211,44 +217,8 @@ class Parser {
 }
 
 void main() {
-  var expressions = <String>[
-    // basic arithmetic
-    '1',
-    '10',
-    '1+12',
-    '1-1',
-    '1-+-3',
-    '2*(7+3)+2*(2*(6+8)+1)',
-    // dice
-    '1d4',
-    '10d20',
-    // dice with set ops
-    '4d6kh3',
-    '4d6kh3kh2',
-    '10d6k>2',
-    // sets
-    '(1)',
-    '(1,2)',
-    '(1, 3,    20)',
-    '(1,1d4,1d12)',
-    '(1, 2+2, 3*2*(2+1), (1, 2, 3), 1d20+3)',
-    // sets with set ops
-    '(1,2,3)kh1',
-    '2d6'
-  ];
-  Lexer lexer;
-  Parser parser;
-
-  for (var expr in expressions) {
-    lexer = Lexer(expr);
-    parser = Parser(lexer);
-    if (Parser.canParse(expr)) {
-      var result = parser.parse();
-      print('$expr:\n  Success\n  ${result}\n  Visualised as ${result.visualise()}');
-    }
-    else {
-      print('$expr:\n  Failure');
-    }
-  }
-
+  var lexer = Lexer('(1, 2+3, 3d4, -5)');
+  var parser = Parser(lexer);
+  var result = parser.parse();
+  print(prettify(result));
 }

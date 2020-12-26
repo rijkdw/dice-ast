@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 
 // BOOLEANS
@@ -33,6 +34,48 @@ String join(List<dynamic> list, String delim) {
 
 String wrapWith(String s, String w, [String r]) {
   return w + s + (r ?? w);
+}
+
+String prettify(dynamic input) {
+
+  // cast to String
+  String inputString;
+  if (!(input is String)) {
+    inputString = input.toString();
+  } else {
+    inputString = (input as String);
+  }
+
+  // remove whitespace after commas
+  while (inputString.contains(', ')) {
+    inputString = inputString.replaceAll(', ', ',');
+  }
+
+  var indent = 0;
+  var output = '';
+
+  void linebreak() {
+    output += '\n' + '   '*indent;
+  }
+
+  for (var i = 0; i < inputString.length; i++) {
+    var c = inputString[i];
+    if (c == '(' || c == '[') {
+      output += c;
+      indent++;
+      linebreak();
+    } else if (c == ')' || c == ']') {
+      indent--;
+      linebreak();
+      output += c;
+    } else if (c == ',') {
+      output += c;
+      linebreak();
+    } else {
+      output += c;
+    }
+  }
+  return output;
 }
 
 // LISTS
@@ -103,4 +146,5 @@ void main() {
   print(makeList(3, 6));
   print(makeList(6, 6));
   print(listSubtraction([1, 1, 2, 3, 4, 4, 5], [1, 3, 4, 5, 6]));
+  prettify('a b, c');
 }

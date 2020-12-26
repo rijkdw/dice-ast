@@ -1,25 +1,28 @@
 import '../../utils.dart';
-import '../objects/die.dart';
-import '../objects/setop.dart';
+import 'die.dart';
 import '../objects/token.dart';
 import 'setlike.dart';
 
 class Dice extends SetLike {
+
+  // attributes
+
   Token token;
   int number, size;
-  List<Die> _die;
-  List<SetOp> setOps;
 
-  Dice(this.token, this.number, this.size) {
-    setOps = [];
-    _die = [];
-  }
+  // constructor
+
+  Dice(this.token, this.number, this.size);
+
+  // factory
 
   factory Dice.fromToken(Token token) {
     var diceRegex = RegExp(r'(\d+)d(\d+)');
     var matches = diceRegex.firstMatch(token.value).groups([1, 2]);
     return Dice(token, int.parse(matches.first), int.parse(matches.last));
   }
+
+  // methods
 
   void evaluate() {
     // operators:
@@ -43,72 +46,24 @@ class Dice extends SetLike {
     return Die.roll(size);
   }
 
-  List<int> _getSetOpValues(SetOp setOp) {
-    // if the selector is >X, then make a list [X+1 -> MAX]
-    if (setOp.sel == '>') {
-      return makeList(setOp.val+1, _maxDieValue);
-    }
-    // if the selector is <X, then make a list [MIN -> X-1]
-    if (setOp.sel == '<') {
-      return makeList(_minDieValue, setOp.val-1);
-    }
-    // if the selector is =X, then make a list [X]
-    if (setOp.sel == '=') {
-      return <int>[setOp.val];
-    }
-    // if the selector is hX, then make a list of highest X values
-    if (setOp.sel == 'h') {
-      var dieValuesSorted = _keptDieValues;
-      dieValuesSorted.sort();
-      return List<int>.from(sublist(dieValuesSorted.reversed.toList(), 0, setOp.val-1));
-    }
-    // if the selector is lX, then make a list of lowest X values
-    if (setOp.sel == 'l') {
-      var dieValuesSorted = _keptDieValues;
-      dieValuesSorted.sort();
-      return List<int>.from(sublist(dieValuesSorted, 0, setOp.val-1));
-    }
-    return [];
-  }
-
-  List<int> _invertSetOpValues(List<int> setOpValues) {
-    var outList = <int>[];
-    for (var i = 1; i < _maxDieValue+1; i++) {
-      if (!setOpValues.contains(i)) {
-        outList.add(i);
-      }
-    }
-    return outList;
-  }
-
-  int get _maxDieValue => size;
-  int get _minDieValue => 1;
-
-  // set operators
-
-  void addSetOp(SetOp setOp) {
-    setOps.add(setOp);
-  }
+  // override Node methods
 
   @override
-  String toString() => 'DiceNode(number=$number, size=$size, die=$_die, setOps=$setOps)';
+  List<Die> get die => List<Die>.from(children);
 
   @override
-  String visualise() => '${number}d${size}';
-
-  @override
-  int get value => sumList(_keptDieValues);
-
-  List<int> get _keptDieValues {
-    var outList = <int>[];
-    for (var d in _die) {
-      if (d.kept) {
-        outList.add(d.value);
-      }
-    }
-    return outList;
+  String visualise() {
+    var setOpsVisualised = join(setOps.map((s) => '${s.op}${s.sel}${s.val}').toList(), '');
+    return '${number}d${size}${setOpsVisualised}';
   }
 
+  // override Object methods
+
   @override
-  List<Die> get die => _die;
+  String toString() {
+    var output = 'Dice(number=$number, size=$size, children=$children, setOps=$setOps)';
+    return output;
+  }
+
+  
 }

@@ -1,5 +1,5 @@
 import '../nodes/node.dart';
-import 'die.dart';
+import '../nodes/die.dart';
 
 /// A wrapper class for any [Node] that is the root of a tree.
 /// Enables obtaining of dice total, kept and ignored dice, etc

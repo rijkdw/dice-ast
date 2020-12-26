@@ -1,7 +1,22 @@
-import '../objects/die.dart';
+import 'die.dart';
 import '../../error.dart';
 
 class Node {
+
+  // attributes
+
+  bool _kept = true;
+
+  // getters
+
+  bool get kept => _kept;
+  bool get discarded => !_kept;
+
+  // setters
+
+  void discard() => _kept = false;
+
+  // toString
 
   // ignore: missing_return
   String visualise() {

@@ -3,6 +3,7 @@ import '../nodes/dice.dart';
 import '../nodes/literal.dart';
 import '../nodes/node.dart';
 import '../nodes/set.dart';
+import '../nodes/setlike.dart';
 import '../nodes/unop.dart';
 import 'lexer.dart';
 import 'nodevisitor.dart';
@@ -14,11 +15,11 @@ class Interpreter extends NodeVisitor {
 
   Interpreter(this.parser, {this.verbose=false}) {
     functionMap = {
-      'visitBinOpNode': visitBinOpNode,
-      'visitLiteralNode': visitLiteralNode,
-      'visitUnaryOpNode': visitUnaryOpNode,
-      'visitSetNode': visitSetNode,
-      'visitDiceNode': visitDiceNode,
+      'visitBinOp': visitBinOp,
+      'visitLiteral': visitLiteral,
+      'visitUnOp': visitUnOp,
+      'visitSet': visitSet,
+      'visitDice': visitDice,
     };
   }
 
@@ -32,25 +33,30 @@ class Interpreter extends NodeVisitor {
   // VISIT NODE METHODS
   // ===========================================================================
 
-  dynamic visitBinOpNode(BinOp node) {
+  dynamic visitBinOp(BinOp node) {
     visit(node.left);
     visit(node.right);
   }
 
-  dynamic visitLiteralNode(Literal node) {}
+  dynamic visitLiteral(Literal node) {}
 
-  dynamic visitUnaryOpNode(UnOp node) {
+  dynamic visitUnOp(UnOp node) {
     visit(node.child);
   }
 
-  dynamic visitSetNode(Set node) {
+  dynamic visitSet(Set node) {
+    visitSetLike(node);
+  }
+
+  dynamic visitDice(Dice node) {
+    visitSetLike(node);
+    node.evaluate();
+  }
+
+  dynamic visitSetLike(SetLike node) {
     for (var child in node.children) {
       visit(child);
     }
-  }
-
-  dynamic visitDiceNode(Dice node) {
-    node.evaluate();
   }
 
   Node interpret() {
@@ -58,4 +64,12 @@ class Interpreter extends NodeVisitor {
     visit(tree);
     return tree;
   }
+}
+
+void main(List<String> args) {
+  var lexer = Lexer('2d20');
+  var parser = Parser(lexer);
+  var interpreter = Interpreter(parser);
+  var tree = interpreter.interpret();
+  print(tree);
 }
