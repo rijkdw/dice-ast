@@ -1,5 +1,5 @@
-import '../utils.dart';
-import '../state.dart' as state;
+import '../../utils.dart';
+import '../../state.dart' as state;
 
 class Die {
   int size;

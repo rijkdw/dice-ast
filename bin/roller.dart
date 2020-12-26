@@ -1,8 +1,8 @@
-import 'interpreter.dart';
-import 'lexer.dart';
-import 'parser.dart';
-import 'result.dart';
-import '../state.dart' as state;
+import 'ast/objects/interpreter.dart';
+import 'ast/objects/lexer.dart';
+import 'ast/objects/parser.dart';
+import 'ast/objects/result.dart';
+import 'state.dart' as state;
 
 class Roller {
   static Result roll(String expression) {
