@@ -9,6 +9,7 @@ class Dice extends SetLike {
 
   Token token;
   int number, size;
+  // children (from SetLike) will all be Die nodes.
 
   // constructor
 
@@ -24,7 +25,11 @@ class Dice extends SetLike {
 
   // methods
 
-  void evaluate() {
+  /// When the interpreter gets to the Dice node, it only has its number, size,
+  /// and setops.  The following steps must therefore be taken:
+  /// 1.  roll the dice
+  /// 2.  apply the set operators
+  void interpret() {
     // operators:
     // k, p:      mark Die as unkept, as appropriate by selector
     // e:         mark Die as exploded and roll another die
@@ -38,8 +43,15 @@ class Dice extends SetLike {
     // h, l:      require access to full values
     // s, >, <    do not require access to full values
 
-    // invalid selectors for operators:
-    // n, x:      >, <, h, l
+    // 1. roll
+    children = <Die>[];
+    for (var i = 0; i < number; i++) {
+      children.add(_rollAnother());
+    }
+
+    // 2. evaluate SetOps
+    applySetOps();
+
   }
 
   Die _rollAnother() {

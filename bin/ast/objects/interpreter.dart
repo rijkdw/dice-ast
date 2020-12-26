@@ -1,3 +1,4 @@
+import '../../utils.dart';
 import '../nodes/binop.dart';
 import '../nodes/dice.dart';
 import '../nodes/literal.dart';
@@ -45,18 +46,13 @@ class Interpreter extends NodeVisitor {
   }
 
   dynamic visitSet(Set node) {
-    visitSetLike(node);
-  }
-
-  dynamic visitDice(Dice node) {
-    visitSetLike(node);
-    node.evaluate();
-  }
-
-  dynamic visitSetLike(SetLike node) {
     for (var child in node.children) {
       visit(child);
     }
+  }
+
+  dynamic visitDice(Dice node) {
+    node.interpret();
   }
 
   Node interpret() {
@@ -71,5 +67,5 @@ void main(List<String> args) {
   var parser = Parser(lexer);
   var interpreter = Interpreter(parser);
   var tree = interpreter.interpret();
-  print(tree);
+  print(prettify(tree));
 }

@@ -9,8 +9,8 @@ class Node {
 
   // getters
 
-  bool get kept => _kept;
-  bool get discarded => !_kept;
+  bool get isKept => _kept;
+  bool get isDiscarded => !_kept;
 
   // setters
 
@@ -31,6 +31,6 @@ class Node {
   // for a dice node, this would be the sum of the results of its rolls
   // for a literal node, this would be its value
 
-  /// The list of Die objects this node has
+  /// The list of Die objects this node has.
   List<Die> get die => [];
 }

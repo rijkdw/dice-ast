@@ -217,7 +217,7 @@ class Parser {
 }
 
 void main() {
-  var lexer = Lexer('(1, 2+3, 3d4, -5)');
+  var lexer = Lexer('(1, 2+3, 3d4, -5)kh1');
   var parser = Parser(lexer);
   var result = parser.parse();
   print(prettify(result));
