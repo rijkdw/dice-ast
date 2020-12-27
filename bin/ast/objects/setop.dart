@@ -9,6 +9,10 @@ class SetOp {
 
   SetOp(this.op, this.sel, this.val);
 
+  // methods
+
+  void interpret() {}
+
   // getters
 
   bool get isValid => !(['n', 'x'].contains(op) && ['>', '<', 'h', 'l'].contains(sel));

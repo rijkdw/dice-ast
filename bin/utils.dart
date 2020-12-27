@@ -80,6 +80,20 @@ String prettify(dynamic input) {
 
 // LISTS
 
+int maxInList(List<int> list, [Function map]) {
+  if (map != null) {
+    list = list.map(map).toList();
+  }
+  return list.reduce(max);
+}
+
+int minInList(List<int> list, [Function map]) {
+  if (map != null) {
+    list = list.map(map).toList();
+  }
+  return list.reduce(min);
+}
+
 int countInList(List<dynamic> list, dynamic val, [Function map]) {
   if (map != null) {
     list = list.map(map).toList();
@@ -93,8 +107,8 @@ int countInList(List<dynamic> list, dynamic val, [Function map]) {
   return count;
 }
 
-num sumList(List<num> list) {
-  num sum = 0;
+int sumList(List<int> list) {
+  var sum = 0;
   list.forEach((v) => sum += v);
   return sum;
 }
@@ -125,6 +139,26 @@ List<dynamic> sublist(List<dynamic> inList, int start, int end) {
   return outList;
 }
 
+List<int> getSafeMaxN(List<int> inList, int n) {
+  var big2small = List<int>.from(inList);
+  big2small.sort();
+  big2small = big2small.reversed.toList();  
+  return getSafeFirstN(big2small, n);
+}
+
+List<int> getSafeMinN(List<int> inList, int n) {
+  var small2big = List<int>.from(inList);
+  small2big.sort();
+  return getSafeFirstN(small2big, n);
+}
+
+List<int> getSafeFirstN(List<int> inList, int n) {
+  if (n > inList.length) {
+    return inList;
+  }
+  return List<int>.from(sublist(inList, 0, n-1));
+}
+
 List<dynamic> listSubtraction(List<dynamic> listA, List<dynamic> listB) {
   // A = [1, 1, 2, 3]
   // B = [1, 3]
@@ -146,5 +180,6 @@ void main() {
   print(makeList(3, 6));
   print(makeList(6, 6));
   print(listSubtraction([1, 1, 2, 3, 4, 4, 5], [1, 3, 4, 5, 6]));
-  prettify('a b, c');
+  print(getSafeMaxN([1, 3, 4, 2], 2));
+  print(getSafeMinN([1, 3, 4, 2], 5));
 }

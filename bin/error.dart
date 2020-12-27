@@ -1,4 +1,5 @@
 enum ErrorType {
+  generic,
   invalidSyntax,
   unexpectedEndOfFunction,
   eatError,
@@ -15,6 +16,7 @@ String errorToString(ErrorType errorType) {
     ErrorType.noVisitNodeMethod: 'No \"visit node\" method',
     ErrorType.notImplemented: 'Method not implemented',
     ErrorType.tooManyRolls: 'Too many rolls',
+    ErrorType.generic: 'Generic error',
   }[errorType];
 }
 

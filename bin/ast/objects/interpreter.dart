@@ -4,11 +4,11 @@ import '../nodes/dice.dart';
 import '../nodes/literal.dart';
 import '../nodes/node.dart';
 import '../nodes/set.dart';
-import '../nodes/setlike.dart';
 import '../nodes/unop.dart';
 import 'lexer.dart';
 import 'nodevisitor.dart';
 import 'parser.dart';
+import 'setop.dart';
 
 class Interpreter extends NodeVisitor {
   Parser parser;
@@ -49,10 +49,12 @@ class Interpreter extends NodeVisitor {
     for (var child in node.children) {
       visit(child);
     }
+    node.applySetOps();
   }
 
   dynamic visitDice(Dice node) {
-    node.interpret();
+    node.roll();
+    node.applySetOps();
   }
 
   Node interpret() {
@@ -63,7 +65,7 @@ class Interpreter extends NodeVisitor {
 }
 
 void main(List<String> args) {
-  var lexer = Lexer('2d20');
+  var lexer = Lexer('1d4eh2');
   var parser = Parser(lexer);
   var interpreter = Interpreter(parser);
   var tree = interpreter.interpret();

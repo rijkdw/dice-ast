@@ -25,35 +25,15 @@ class Dice extends SetLike {
 
   // methods
 
-  /// When the interpreter gets to the Dice node, it only has its number, size,
-  /// and setops.  The following steps must therefore be taken:
-  /// 1.  roll the dice
-  /// 2.  apply the set operators
-  void interpret() {
-    // operators:
-    // k, p:      mark Die as unkept, as appropriate by selector
-    // e:         mark Die as exploded and roll another die
-    // r, o, a:   reroll Die...
-      // r        reroll Die infinitely, discard original
-      // o        reroll Die once, discard original
-      // a        reroll Die once, keep original
-    // n, x:      overwrite Die value with V if smaller / larger than V
-
-    // selectors:
-    // h, l:      require access to full values
-    // s, >, <    do not require access to full values
-
-    // 1. roll
+  /// Roll [number]d[size].
+  void roll() {
     children = <Die>[];
     for (var i = 0; i < number; i++) {
       children.add(_rollAnother());
     }
-
-    // 2. evaluate SetOps
-    applySetOps();
-
   }
 
+  /// Roll one [Die] according to this [Dice]'s [size].
   Die _rollAnother() {
     return Die.roll(size);
   }
