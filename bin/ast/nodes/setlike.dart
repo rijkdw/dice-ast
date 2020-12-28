@@ -26,6 +26,16 @@ abstract class SetLike extends Node {
     });
     return list;
   }
+
+  List<Node> get discardedChildren {
+    var list = <Node>[];
+    children.forEach((child) {
+      if (child.isDiscarded) {
+        list.add(child);
+      }
+    });
+    return list;
+  }
   
   /// The values of the node's children that have not been discarded.
   List<int> get keptChildrenValues => keptChildren.map((child) => child.value).toList();
@@ -74,6 +84,7 @@ abstract class SetLike extends Node {
   void _applyOpWithValues(String op, SetOpValueList setOpValueList) {
     // if this is something only applicable to a Dice, throw it over to Dice
     if (this is Dice && ['e', 'r', 'o', 'a', 'n', 'x'].contains(op)) {
+      print('Passing to self as Dice object');
       (this as Dice).applyOpWithValues(op, setOpValueList);
     }
   }
@@ -98,8 +109,35 @@ abstract class SetLike extends Node {
 
       // check if setOp can be applied to this SetLike
       if (['e', 'r', 'o', 'a', 'n', 'x'].contains(setOp.op) && this is Set) {
-        print('Skipping because an invalid operator is used on a Set');
+        print('Skipping because $setOp cannot be used on a Set.');
         continue;
+      }
+
+      // check if it's valid, skip if invalid
+      if (setOp.isInvalid) {
+        print('Skipping because $setOp is invalid.');
+        continue;
+      }
+
+      // keep and drop
+      if (setOp.op == 'k') {
+        var setOpValueList = generateSetOpValues(setOp);
+        for (var child in children) {
+          if (setOpValueList.contains(child.value)) {
+            setOpValueList.use(child.value);
+          } else {
+            child.discard();
+          }
+        }
+      }
+      if (setOp.op == 'p') {
+        var setOpValueList = generateSetOpValues(setOp);
+        for (var child in children) {
+          if (setOpValueList.contains(child.value)) {
+            setOpValueList.use(child.value);
+            child.discard();
+          }
+        }
       }
 
       // if op=='e' or op=='r', merge together with following matching SetOps
@@ -113,6 +151,8 @@ abstract class SetLike extends Node {
         }
         print(setOpValueList);
         _applyOpWithValues(setOp.op, setOpValueList);
+      } else {
+        _applyOpWithValues(setOp.op, generateSetOpValues(setOp));
       }
       
     }

@@ -16,6 +16,7 @@ class SetOp {
   // getters
 
   bool get isValid => !(['n', 'x'].contains(op) && ['>', '<', 'h', 'l'].contains(sel));
+  bool get isInvalid => !isValid;
 
   bool get isAbsoluteSelector => ['>', '=', '<'].contains(sel);
   bool get isRelativeSelector => !isAbsoluteSelector;

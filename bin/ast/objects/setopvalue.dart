@@ -1,4 +1,5 @@
 import '../../error.dart';
+import '../../utils.dart';
 
 class SetOpValue {
 
@@ -35,6 +36,10 @@ class SetOpValueList {
   SetOpValueList(List<SetOpValue> setOpValues) {
     _setOpValues = List<SetOpValue>.from(setOpValues);
   }
+
+  List<int> get values => _setOpValues.map((sov) => sov.value).toList();
+  int get minValue => minInList(values);
+  int get maxValue => maxInList(values);
 
   bool contains(int value) {
     for (var setOpValue in _setOpValues) {

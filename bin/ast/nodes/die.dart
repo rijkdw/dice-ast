@@ -54,6 +54,8 @@ class Die extends Node {
   String toString() {
     var output = 'Die(size=$size, values=$values';
     output += exploded ? ', --exploded' : '';
+    output += isOverwritten ? ', --overwritten' : '';
+    output += isDiscarded ? ', --discarded' : '';
     return output + ')';
   }
 }

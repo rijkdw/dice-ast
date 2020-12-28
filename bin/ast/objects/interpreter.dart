@@ -8,7 +8,6 @@ import '../nodes/unop.dart';
 import 'lexer.dart';
 import 'nodevisitor.dart';
 import 'parser.dart';
-import 'setop.dart';
 
 class Interpreter extends NodeVisitor {
   Parser parser;
@@ -65,7 +64,7 @@ class Interpreter extends NodeVisitor {
 }
 
 void main(List<String> args) {
-  var lexer = Lexer('1d4n=4');
+  var lexer = Lexer('4d6kh3');
   var parser = Parser(lexer);
   var interpreter = Interpreter(parser);
   var tree = interpreter.interpret();
