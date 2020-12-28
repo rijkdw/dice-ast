@@ -1,4 +1,6 @@
+import '../../utils.dart';
 import '../objects/token.dart';
+import 'die.dart';
 import 'node.dart';
 
 class BinOp extends Node {
@@ -15,6 +17,12 @@ class BinOp extends Node {
   }
 
   // override Node methods
+
+  @override
+  String visualise() => '${left.visualise()}${op.value}${right.visualise()}';
+
+  @override
+  List<Die> get die => left.die + right.die;
 
   @override
   int get value {

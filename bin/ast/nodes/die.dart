@@ -34,17 +34,27 @@ class Die extends Node {
 
   bool get isOverwritten => values.length > 1;
 
+  bool get isCrit => value == size;
+  bool get isFail => value == 1;
+
   // override Node methods
   
   @override
   int get value => values.last;
 
+  @override
+  List<Die> get die => [this];
+
+  @override
+  String visualise() => '$value';
+
   // override Object methods
 
   @override
   String toString() {
-    var output = 'Die(size=$size, values=$values)';
-    return output;
+    var output = 'Die(size=$size, values=$values';
+    output += exploded ? ', --exploded' : '';
+    return output + ')';
   }
 }
 

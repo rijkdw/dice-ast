@@ -1,7 +1,7 @@
 import 'die.dart';
 import '../../error.dart';
 
-class Node {
+abstract class Node {
 
   // attributes
 
@@ -16,15 +16,11 @@ class Node {
 
   void discard() => _kept = false;
 
-  // toString
-
-  // ignore: missing_return
-  String visualise() {
-    raiseError(ErrorType.notImplemented);
-  }
+  /// Return this node in dice notation.
+  String visualise();
 
   /// Return the integer value of this node.
-  int get value => 0;
+  int get value;
 
   // for a binary node, this would = A OP B
   // for a unary node, this would = OP A
@@ -32,5 +28,5 @@ class Node {
   // for a literal node, this would be its value
 
   /// The list of Die objects this node has.
-  List<Die> get die => [];
+  List<Die> get die;
 }

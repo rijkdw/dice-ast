@@ -45,7 +45,7 @@ class SetOpValueList {
     return false;
   }
 
-  void use(int value) {
+  SetOpValue use(int value) {
     if (!contains(value)) {
       raiseError(ErrorType.generic, 'Cannot use $value with $this');
     };
@@ -53,6 +53,7 @@ class SetOpValueList {
       // cannot use a used value
       if (setOpValue.value == value && setOpValue.isAvailable) {
         setOpValue.use();
+        return setOpValue;
       }
     }
   }

@@ -1,4 +1,5 @@
 import '../objects/token.dart';
+import 'die.dart';
 import 'node.dart';
 
 class Literal extends Node {
@@ -18,6 +19,12 @@ class Literal extends Node {
 
   @override
   int get value => literalValue;
+
+  @override
+  String visualise() => '$literalValue';
+
+  @override
+  List<Die> get die => [];
 
   // override Object methods
 

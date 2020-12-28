@@ -1,4 +1,5 @@
 import '../objects/token.dart';
+import 'die.dart';
 import 'node.dart';
 
 class UnOp extends Node {
@@ -26,6 +27,12 @@ class UnOp extends Node {
     }
     return 0;
   }
+
+  @override
+  String visualise() => '${op.value}${child.visualise()}';
+
+  @override
+  List<Die> get die => child.die;
 
   // override Object methods
 

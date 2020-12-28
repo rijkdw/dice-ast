@@ -2,10 +2,12 @@ import '../../error.dart';
 import '../../utils.dart';
 import '../objects/setop.dart';
 import '../objects/setopvalue.dart';
+import 'dice.dart';
+import 'die.dart';
 import 'node.dart';
 import 'set.dart';
 
-class SetLike extends Node {
+abstract class SetLike extends Node {
 
   // attributes
 
@@ -34,6 +36,9 @@ class SetLike extends Node {
 
   @override
   int get value => sumList(keptChildrenValues);
+
+  @override
+  List<Die> get die => List<Die>.from(joinLists(children.map((child) => child.die).toList()));
 
   // SetOps
 
@@ -67,8 +72,9 @@ class SetLike extends Node {
   }
 
   void _applyOpWithValues(String op, SetOpValueList setOpValueList) {
-    for (var i = 0; i < children.length; i++) {
-      
+    // if this is something only applicable to a Dice, throw it over to Dice
+    if (this is Dice && ['e', 'r', 'o', 'a', 'n', 'x'].contains(op)) {
+      (this as Dice).applyOpWithValues(op, setOpValueList);
     }
   }
 

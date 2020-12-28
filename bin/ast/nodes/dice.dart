@@ -1,4 +1,5 @@
 import '../../utils.dart';
+import '../objects/setopvalue.dart';
 import 'die.dart';
 import '../objects/token.dart';
 import 'setlike.dart';
@@ -13,7 +14,9 @@ class Dice extends SetLike {
 
   // constructor
 
-  Dice(this.token, this.number, this.size);
+  Dice(this.token, this.number, this.size) {
+    children = <Die>[];
+  }
 
   // factory
 
@@ -38,6 +41,82 @@ class Dice extends SetLike {
     return Die.roll(size);
   }
 
+  void applyOpWithValues(String op, SetOpValueList setOpValueList) {
+    if (op == 'e') {
+      for (var i = 0; i < children.length; i++) {
+        var dieI = die[i];
+        if (setOpValueList.contains(dieI.value)) {
+          // do the explode sequence
+          setOpValueList.use(dieI.value); // use the value
+          var newDie = _rollAnother();    // get a new Die
+          children.insert(i+1, newDie);   // insert it just behind the current Die
+          dieI.explode();                 // mark the current die as exploded
+        }
+      }
+    }
+    if (op == 'r') {
+      for (var i = 0; i < children.length; i++) {
+        var dieI = die[i];
+        if (setOpValueList.contains(dieI.value)) {
+          // do the reroll sequence
+          setOpValueList.use(dieI.value); // use
+          var newDie = _rollAnother();    // get new
+          children.insert(i+1, newDie);   // add to list
+          dieI.discard();                 // discard original
+        }
+      }
+    }
+    // reroll once and add
+    if (op == 'a') {
+      for (var i = 0; i < children.length; i++) {
+        var dieI = die[i];
+        if (setOpValueList.contains(dieI.value)) {
+          // do the reroll-once-and-add sequence
+          setOpValueList.use(dieI.value); // use
+          var newDie = _rollAnother();    // get new
+          children.insert(i+1, newDie);   // add to list
+          i++;                            // don't consider new dice
+        }
+      }
+    }
+    // reroll once
+    if (op == 'o') {
+      for (var i = 0; i < children.length; i++) {
+        var dieI = die[i];
+        if (setOpValueList.contains(dieI.value)) {
+          // do the reroll-once sequence
+          setOpValueList.use(dieI.value); // use
+          var newDie = _rollAnother();    // get new
+          children.insert(i+1, newDie);   // add to list
+          dieI.discard();                 // discard original
+          i++;                            // don't consider new dice
+        }
+      }
+    }
+    // minimum
+    if (op == 'n') {
+      for (var i = 0; i < children.length; i++) {
+        var dieI = die[i];
+        if (setOpValueList.contains(dieI.value)) {
+          // do the reroll-once sequence
+          var setOpValue = setOpValueList.use(dieI.value);  // use
+          dieI.value = setOpValue.value;                    // rewrite
+        }
+      }
+    }
+    // maximum
+    if (op == 'x') {
+      for (var i = 0; i < children.length; i++) {
+        var dieI = die[i];
+        if (setOpValueList.contains(dieI.value)) {
+          // do the reroll-once sequence
+          var setOpValue = setOpValueList.use(dieI.value);  // use
+          dieI.value = setOpValue.value;                    // rewrite
+        }
+      }
+    }
+  }
+
   // override Node methods
 
   @override
@@ -53,7 +132,7 @@ class Dice extends SetLike {
 
   @override
   String toString() {
-    var output = 'Dice(number=$number, size=$size, children=$children, setOps=$setOps)';
+    var output = 'Dice(total=$value, number=$number, size=$size, children=$children, setOps=$setOps)';
     return output;
   }
 

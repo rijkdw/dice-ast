@@ -80,6 +80,14 @@ String prettify(dynamic input) {
 
 // LISTS
 
+List<dynamic> joinLists(List<List<dynamic>> listOfLists) {
+  var returnList = [];
+  for (var list in listOfLists) {
+    returnList.addAll(list);
+  }
+  return returnList;
+}
+
 int maxInList(List<int> list, [Function map]) {
   if (map != null) {
     list = list.map(map).toList();
@@ -182,4 +190,5 @@ void main() {
   print(listSubtraction([1, 1, 2, 3, 4, 4, 5], [1, 3, 4, 5, 6]));
   print(getSafeMaxN([1, 3, 4, 2], 2));
   print(getSafeMinN([1, 3, 4, 2], 5));
+  print(joinLists([[1, 2, 3], [4, 5]]));
 }

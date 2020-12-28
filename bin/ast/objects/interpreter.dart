@@ -65,7 +65,7 @@ class Interpreter extends NodeVisitor {
 }
 
 void main(List<String> args) {
-  var lexer = Lexer('1d4eh2');
+  var lexer = Lexer('1d4n=4');
   var parser = Parser(lexer);
   var interpreter = Interpreter(parser);
   var tree = interpreter.interpret();
