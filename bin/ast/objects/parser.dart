@@ -158,11 +158,16 @@ class Parser {
     _debugPrint(currentToken.toString());
     // (setOp)*
     while (currentToken.type == TokenType.SETOP_OP) {
-      var op = currentToken.value;
+      var op, sel, val;
+      op = currentToken.value;
       eat(TokenType.SETOP_OP);
-      var sel = currentToken.value;
-      eat(TokenType.SETOP_SEL);
-      var val = currentToken.value;
+      if (currentToken.type == TokenType.SETOP_SEL) {
+        sel = currentToken.value;
+        eat(TokenType.SETOP_SEL);
+      } else if (currentToken.type == TokenType.INT) {
+        sel = '=';
+      }
+      val = currentToken.value;
       eat(TokenType.INT);
       var setOp = SetOp(op, sel, val);
       if (node is SetLike) {

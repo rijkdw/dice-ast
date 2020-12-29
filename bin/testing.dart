@@ -228,6 +228,11 @@ void main() {
       return die.length == 10;
     }, repeats: 100),
 
+    // Test('Absurd expression 1', () {
+    //   var expression = '4d4e=3';
+    //   var result = Roller.roll(expression).rootNode;
+    // }, repeats: 100)
+
   ]);
 
   tests.performTests();
