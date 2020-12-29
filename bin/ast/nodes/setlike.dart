@@ -66,10 +66,14 @@ abstract class SetLike extends Node {
       return SetOpValueList([SetOpValue(setOp.val, true)]);
     }
     if (setOp.sel == '>') {
-      return SetOpValueList(makeList(setOp.val+1, _maxChildValue).map((v) => SetOpValue(v, true)).toList());
+      var min = setOp.val+1;
+      var max = this is Dice? (this as Dice).size : _maxChildValue;
+      return SetOpValueList(makeList(min, max).map((v) => SetOpValue(v, true)).toList());
     }
     if (setOp.sel == '<') {
-      return SetOpValueList(makeList(_minChildValue, setOp.val-1).map((v) => SetOpValue(v, true)).toList());
+      var min = this is Dice? 1 : _minChildValue;
+      var max = setOp.val-1;
+      return SetOpValueList(makeList(min, max).map((v) => SetOpValue(v, true)).toList());
     }
     if (setOp.sel == 'h') {
       return SetOpValueList(getSafeMaxN(keptChildrenValues, setOp.val).map((v) => SetOpValue(v, false)).toList());
@@ -84,13 +88,12 @@ abstract class SetLike extends Node {
   void _applyOpWithValues(String op, SetOpValueList setOpValueList) {
     // if this is something only applicable to a Dice, throw it over to Dice
     if (this is Dice && ['e', 'r', 'o', 'a', 'n', 'x'].contains(op)) {
-      print('Passing to self as Dice object');
+      // print('Passing to self as Dice object');
       (this as Dice).applyOpWithValues(op, setOpValueList);
     }
   }
 
   void applySetOps() {
-    print('SetOps on this SetLike: $setOps');
     // operators:
     // k, p:      mark Die as unkept, as appropriate by selector
     // e:         mark Die as exploded and roll another die
@@ -149,7 +152,7 @@ abstract class SetLike extends Node {
           setOpValueList += generateSetOpValues(setOps[lookahead]);
           lookahead++;
         }
-        print(setOpValueList);
+        // print(setOpValueList);
         _applyOpWithValues(setOp.op, setOpValueList);
       } else {
         _applyOpWithValues(setOp.op, generateSetOpValues(setOp));

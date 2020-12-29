@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'package:collection/collection.dart';
 import 'dart:math';
 
 // BOOLEANS
@@ -79,6 +79,11 @@ String prettify(dynamic input) {
 }
 
 // LISTS
+
+bool listEquality(List<dynamic> listA, List<dynamic> listB) {
+  var eq = ListEquality().equals;
+  return eq(listA, listB);
+}
 
 List<dynamic> joinLists(List<List<dynamic>> listOfLists) {
   var returnList = [];
