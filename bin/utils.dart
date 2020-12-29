@@ -140,6 +140,11 @@ List<int> makeList(num min, num max) {
 }
 
 List<dynamic> sublist(List<dynamic> inList, int start, int end) {
+  var countRollovers = 0;
+  while (end < 0 && countRollovers < 100) {
+    end += inList.length-1;
+    countRollovers++;
+  }
   if (inList.length-1 < end) {
     throw Exception('List with length=${inList.length} (last index=${inList.length-1}) cannot be sublisted as [$start, $end]');
   }
@@ -196,4 +201,5 @@ void main() {
   print(getSafeMaxN([1, 3, 4, 2], 2));
   print(getSafeMinN([1, 3, 4, 2], 5));
   print(joinLists([[1, 2, 3], [4, 5]]));
+  print(sublist([1, 2, 3], 0, -1));
 }

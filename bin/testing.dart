@@ -1,9 +1,11 @@
 import 'ast/nodes/dice.dart';
+import 'ast/nodes/die.dart';
 import 'ast/nodes/set.dart';
 import 'ast/nodes/setlike.dart';
 import 'ast/objects/interpreter.dart';
 import 'ast/objects/lexer.dart';
 import 'ast/objects/parser.dart';
+import 'roller.dart';
 import 'utils.dart';
 import 'state.dart' as state;
 
@@ -81,25 +83,36 @@ void main() {
     Test('Test-test.', () {
       var result = 123;
       return result*2 == 246;
-    }, repeats: 100),
+    }),
 
     Test('Arithmetic', () {
-      var result = Interpreter(Parser(Lexer('1+2*3+(3-1)*2'))).interpret();
+      var result = Roller.roll('1+2*3+(3-1)*2').rootNode;
       return result.value == 11;
     }),
 
     Test('Arithmetic + sets', () {
-      var result = Interpreter(Parser(Lexer('2*3+((1, 2, 3)+4)*2'))).interpret();
+      var result = Roller.roll('2*3+((1, 2, 3)+4)*2').rootNode;
       return result.value == 26;
     }),
 
     Test('Arithmetic + sets + setops', () {
-      var result = Interpreter(Parser(Lexer('2*3+((1, 2, 3)kh2+4)*2'))).interpret();
+      var result = Roller.roll('2*3+((1, 2, 3)kh2+4)*2').rootNode;
       return result.value == 24;
     }),
 
+    Test('Set evaluation', () {
+      var result = Roller.roll('(1, 2, 3)').rootNode;
+      return result.value == 6;
+    }),
+
+    Test('Set evaluation with dice', () {
+      var result = Roller.roll('(1, 4d4)').rootNode;
+      // print(result.value);
+      return makeList(5, 17).contains(result.value);
+    }, repeats: 10000),
+
     Test('Keeping 3 out of 4 dice.', () {
-      var result = Interpreter(Parser(Lexer('4d6kh3'))).interpret();
+      var result = Roller.roll('4d6kh3').rootNode;
       var threeRemain = (result as Dice).keptChildren.length == 3;
       var lowestDropped = 
           (result as SetLike).discardedChildren.length == 1 &&
@@ -110,25 +123,30 @@ void main() {
     }, repeats: 100),
 
     Test('Stat rolling within range of 3 - 18.', () {
-      var result = Interpreter(Parser(Lexer('4d6kh3'))).interpret();
+      var result = Roller.roll('4d6kh3').rootNode;
       var stat = result.value;
       return makeList(3, 18).contains(stat);
     }, repeats: 10000),
 
     Test('Keeping 2 out of 3 in a set', () {
-      var result = Interpreter(Parser(Lexer('(1, 2+1, 2*2)kh2'))).interpret();
+      var result = Roller.roll('(1, 2+1, 2*2)kh2').rootNode;
       return listEquality((result as Set).keptChildrenValues, [3,4]);
     }),
 
+    Test('Keep/drop of identical values', () {
+      var result = Roller.roll('(1, 1, 2, 3)kh3').rootNode;
+      return listEquality((result as Set).keptChildrenValues, [1, 2, 3]);
+    }),
+
     Test('Middle-vantage', () {
-      var result = Interpreter(Parser(Lexer('3d20kh2ph1'))).interpret();
+      var result = Roller.roll('3d20kh2ph1').rootNode;
       var allThreeValues = (result as SetLike).children.map((c) => c.value).toList();
       allThreeValues.sort();
       return result.value == allThreeValues[1];
     }, repeats: 100),
 
     Test('Explosions 1', () {
-      var result = Interpreter(Parser(Lexer('4d6e>3'))).interpret();
+      var result = Roller.roll('4d6e>3').rootNode;
       var die = (result as Dice).die;
       for (var d in die) {
         if (d.value > 3 && !d.exploded) return false;
@@ -138,7 +156,7 @@ void main() {
     }, repeats: 100),
 
     Test('Explosions 2', () {
-      var result = Interpreter(Parser(Lexer('4d6e<3'))).interpret();
+      var result = Roller.roll('4d6e<3').rootNode;
       var die = (result as Dice).die;
       for (var d in die) {
         if (d.value < 3 && !d.exploded) return false;
@@ -148,7 +166,7 @@ void main() {
     }, repeats: 100),
 
     Test('Explosions 3', () {
-      var result = Interpreter(Parser(Lexer('4d6e=1e=3e=5'))).interpret();
+      var result = Roller.roll('4d6e=1e=3e=5').rootNode;
       var die = (result as Dice).die;
       for (var d in die) {
         if ([1, 3, 5].contains(d.value) && !d.exploded) return false;
@@ -157,10 +175,57 @@ void main() {
       return true;
     }, repeats: 100),
 
+    Test('Reroll 1', () {
+      var result = Roller.roll('1d4r>1').rootNode;
+      var die = (result as Dice).die;
+      for (var d in die) {
+        if (d.value > 1 && d.isKept) return false;
+      }
+      return true;
+    }, repeats: 100),
+
+    Test('Reroll and add', () {
+      var result = Roller.roll('1d4a=4').rootNode;
+      var die = (result as Dice).die;
+      if (die.first.value == 4) {
+        if (die.first.isDiscarded) return false;
+        if (die.length < 2) return false;
+      }
+      return true;
+    }, repeats: 100),
+
+    Test('Reroll once', () {
+      var result = Roller.roll('1d4o=4').rootNode;
+      var die = (result as Dice).die;
+      if (die.first.value == 4) {
+        if (die.first.isKept) return false;
+        if (die.length < 2) return false;
+      }
+      return true;
+    }, repeats: 100),
+
+    Test('Minimum', () {
+      var result = Roller.roll('10d20n=19').rootNode;
+      var die = (result as Dice).die;
+      for (var d in die) {
+        if (d.value < 19) return false;
+      }
+      return true;
+    }, repeats: 100),
+
+    Test('Maximum', () {
+      var result = Roller.roll('10d20x=2').rootNode;
+      var die = (result as Dice).die;
+      for (var d in die) {
+        if (d.value > 2) return false;
+      }
+      return true;
+    }, repeats: 100),
+
     Test('Die returning', () {
-      var result = Interpreter(Parser(Lexer('(3d6, 4d10, 1d20)+2'))).interpret();
+      var result = Roller.roll('(3d6, 4d10, 1d20)+2d4').rootNode;
       var die = result.die;
-      return die.length == 8;
+      return die.length == 10;
     }, repeats: 100),
 
   ]);
