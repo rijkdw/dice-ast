@@ -166,7 +166,7 @@ void main() {
     }, repeats: 100),
 
     Test('Explosions 3', () {
-      var result = Roller.roll('4d6e=1e=3e=5').rootNode;
+      var result = Roller.roll('4d6e1e3e5').rootNode;
       var die = (result as Dice).die;
       for (var d in die) {
         if ([1, 3, 5].contains(d.value) && !d.exploded) return false;
@@ -185,7 +185,7 @@ void main() {
     }, repeats: 100),
 
     Test('Reroll and add', () {
-      var result = Roller.roll('1d4a=4').rootNode;
+      var result = Roller.roll('1d4a4').rootNode;
       var die = (result as Dice).die;
       if (die.first.value == 4) {
         if (die.first.isDiscarded) return false;
@@ -195,7 +195,7 @@ void main() {
     }, repeats: 100),
 
     Test('Reroll once', () {
-      var result = Roller.roll('1d4o=4').rootNode;
+      var result = Roller.roll('1d4o4').rootNode;
       var die = (result as Dice).die;
       if (die.first.value == 4) {
         if (die.first.isKept) return false;
@@ -205,7 +205,7 @@ void main() {
     }, repeats: 100),
 
     Test('Minimum', () {
-      var result = Roller.roll('10d20n=19').rootNode;
+      var result = Roller.roll('10d20n19').rootNode;
       var die = (result as Dice).die;
       for (var d in die) {
         if (d.value < 19) return false;
@@ -214,7 +214,7 @@ void main() {
     }, repeats: 100),
 
     Test('Maximum', () {
-      var result = Roller.roll('10d20x=2').rootNode;
+      var result = Roller.roll('10d20x2').rootNode;
       var die = (result as Dice).die;
       for (var d in die) {
         if (d.value > 2) return false;
@@ -228,10 +228,18 @@ void main() {
       return die.length == 10;
     }, repeats: 100),
 
+    Test('Invalid setops', () {
+      var expression = '1d20n>1';
+      return !Parser.canParse(expression);
+    }),
+
     // Test('Absurd expression 1', () {
-    //   var expression = '4d4e=3';
+    //   var expression = '4d2e>1kh1e2';
     //   var result = Roller.roll(expression).rootNode;
-    // }, repeats: 100)
+    //   print('===========================');
+    //   print(prettify(result.die));
+    //   return true;
+    // }, repeats: 3)
 
   ]);
 

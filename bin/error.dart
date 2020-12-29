@@ -6,6 +6,7 @@ enum ErrorType {
   noVisitNodeMethod,
   notImplemented,
   tooManyRolls,
+  invalidSetOp,
 }
 
 String errorToString(ErrorType errorType) {
@@ -17,6 +18,7 @@ String errorToString(ErrorType errorType) {
     ErrorType.notImplemented: 'Method not implemented',
     ErrorType.tooManyRolls: 'Too many rolls',
     ErrorType.generic: 'Generic error',
+    ErrorType.invalidSetOp: 'Invalid setOp',
   }[errorType];
 }
 

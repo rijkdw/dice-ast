@@ -170,6 +170,9 @@ class Parser {
       val = currentToken.value;
       eat(TokenType.INT);
       var setOp = SetOp(op, sel, val);
+      if (setOp.isInvalid) {
+        error.raiseError(error.ErrorType.invalidSetOp, 'Invalid SetOp $setOp.');
+      }
       if (node is SetLike) {
         node.addSetOp(setOp);
       }
@@ -205,7 +208,6 @@ class Parser {
       testParser.parse();
       return true;
     } catch (e) {
-      print(e);
       return false;
     }
   }
