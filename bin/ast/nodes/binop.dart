@@ -1,4 +1,3 @@
-import '../../utils.dart';
 import '../objects/token.dart';
 import 'die.dart';
 import 'node.dart';
@@ -40,6 +39,9 @@ class BinOp extends Node {
     }
     return 0;
   }
+
+  @override
+  List<num> get possibilities => [];
 
   // override Object methods
 

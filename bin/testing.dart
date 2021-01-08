@@ -1,5 +1,6 @@
+import 'package:collection/collection.dart';
+
 import 'ast/nodes/dice.dart';
-import 'ast/nodes/die.dart';
 import 'ast/nodes/set.dart';
 import 'ast/nodes/setlike.dart';
 import 'ast/objects/interpreter.dart';
@@ -231,6 +232,15 @@ void main() {
     Test('Invalid setops', () {
       var expression = '1d20n>1';
       return !Parser.canParse(expression);
+    }),
+
+    Test('Distribution 1', () {
+      var interpreter = Interpreter(Parser(Lexer('2d6')));
+      var tree = interpreter.interpret();
+      var poss = tree.possibilities;
+      poss.sort();
+      print(poss);
+      return false;
     }),
 
     // Test('Absurd expression 1', () {

@@ -15,10 +15,22 @@ class UnOp extends Node {
     op = token;
   }
 
+  // getters
+
+  int get coefficient {
+    if (op.type == TokenType.PLUS) {
+      return 1;
+    } else if (op.type == TokenType.MINUS) {
+      return -1;
+    }
+    return 0;
+  }
+
   // override Node methods
 
   @override
   int get value {
+    return child.value * coefficient;
     if (op.type == TokenType.PLUS) {
       return child.value;
     }
@@ -33,6 +45,9 @@ class UnOp extends Node {
 
   @override
   List<Die> get die => child.die;
+
+  @override
+  List<num> get possibilities => child.possibilities.map((p) => p*coefficient).toList();
 
   // override Object methods
 

@@ -3,7 +3,6 @@ import '../nodes/node.dart';
 
 class NodeVisitor {
   Map<String, Function> functionMap;
-  Node previouslyVisitedNode;
 
   void visit(Node node) {
     var functionName = 'visit${node.runtimeType}';

@@ -1,7 +1,9 @@
 import 'package:collection/collection.dart';
 import 'dart:math';
 
-// BOOLEANS
+// ------------------------------------------------------------
+// booleans
+// ------------------------------------------------------------
 
 bool isNumeric(String s) {
   if (s == null) return false;
@@ -13,14 +15,18 @@ bool isDigit(String s) => isNumeric(s) && s.length == 1;
 
 bool isSpace(String s) => s.trim().isEmpty;
 
-// RANDOM
+// ------------------------------------------------------------
+// randoms
+// ------------------------------------------------------------
 
 Random _random = Random();
 
 // [min, max]
 int randInRange(int min, int max) => min + _random.nextInt(max + 1 - min);
 
-// STRINGS
+// ------------------------------------------------------------
+// Strings
+// ------------------------------------------------------------
 
 String join(List<dynamic> list, String delim) {
   var output = '';
@@ -60,11 +66,11 @@ String prettify(dynamic input) {
 
   for (var i = 0; i < inputString.length; i++) {
     var c = inputString[i];
-    if (c == '(' || c == '[') {
+    if (c == '(' || c == '[' || c == '{') {
       output += c;
       indent++;
       linebreak();
-    } else if (c == ')' || c == ']') {
+    } else if (c == ')' || c == ']' || c == '}') {
       indent--;
       linebreak();
       output += c;
@@ -78,7 +84,9 @@ String prettify(dynamic input) {
   return output;
 }
 
-// LISTS
+// ------------------------------------------------------------
+// Lists
+// ------------------------------------------------------------
 
 bool listEquality(List<dynamic> listA, List<dynamic> listB) {
   var eq = ListEquality().equals;
@@ -121,6 +129,12 @@ int countInList(List<dynamic> list, dynamic val, [Function map]) {
 }
 
 int sumList(List<int> list) {
+  var sum = 0;
+  list.forEach((v) => sum += v);
+  return sum;
+}
+
+num sumNumList(List<num> list) {
   var sum = 0;
   list.forEach((v) => sum += v);
   return sum;
@@ -189,6 +203,37 @@ List<dynamic> listSubtraction(List<dynamic> listA, List<dynamic> listB) {
   return listC;
 }
 
+// ------------------------------------------------------------
+// permutations
+// ------------------------------------------------------------
+
+List<List<num>> permutations(List<List<num>> elements) {
+  return _PermutationAlgorithmNums(elements).permutations();
+}
+
+class _PermutationAlgorithmNums {
+  final List<List<num>> elements;
+
+  _PermutationAlgorithmNums(this.elements);
+
+  List<List<num>> permutations() {
+    List<List<num>> perms = [];
+    generatePermutations(elements, perms, 0, []);
+    return perms;
+  }
+
+  void generatePermutations(List<List<num>> lists, List<List<num>> result, int depth, List<num> current) {
+    if (depth == lists.length) {
+      result.add(current);
+      return;
+    }
+
+    for (var i = 0; i < lists[depth].length; i++) {
+      generatePermutations(lists, result, depth + 1, [...current, lists[depth][i]]);
+    }
+  }
+}
+
 void main() {
   var myStrings = ['a', 'b', 'c'];
   print(join(myStrings, ','));
@@ -202,4 +247,5 @@ void main() {
   print(getSafeMinN([1, 3, 4, 2], 5));
   print(joinLists([[1, 2, 3], [4, 5]]));
   print(sublist([1, 2, 3], 0, -1));
+  print(permutations([[1, 2, 3], [4, 5, 6], [7, 8, 9]]));
 }

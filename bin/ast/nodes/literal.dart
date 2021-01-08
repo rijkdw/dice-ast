@@ -26,6 +26,9 @@ class Literal extends Node {
   @override
   List<Die> get die => [];
 
+  @override
+  List<num> get possibilities => [literalValue];
+
   // override Object methods
 
   @override
