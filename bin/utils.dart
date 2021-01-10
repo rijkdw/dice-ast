@@ -232,6 +232,30 @@ Map<dynamic, double> listToPercMap(List<dynamic> list) {
 }
 
 // ------------------------------------------------------------
+// time
+// ------------------------------------------------------------
+
+enum TimeUnit {
+  seconds,
+  milliseconds,
+  microseconds
+}
+
+int time(Function callback, {TimeUnit timeUnit=TimeUnit.milliseconds}) {
+  var startTime = DateTime.now().microsecondsSinceEpoch;
+  callback();
+  var duration = DateTime.now().microsecondsSinceEpoch - startTime;
+  switch (timeUnit) {
+    case TimeUnit.microseconds:
+      return duration;
+    case TimeUnit.milliseconds:
+      return duration~/1000;
+    case TimeUnit.seconds: default:
+      return duration~/1000000;
+  }
+}
+
+// ------------------------------------------------------------
 // permutations
 // ------------------------------------------------------------
 

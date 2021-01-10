@@ -234,6 +234,29 @@ void main() {
       return !Parser.canParse(expression);
     }),
 
+    Test('Roller.rollN() method', () {
+      var results = Roller.rollN('4d6kh3', 100);
+      var totals = results.map((result) => result.total).toList();
+      totals.forEach((total) {
+        if (total > 18 || total < 3) {
+          return false;
+        }
+      });
+      return true;
+    }, repeats: 100),
+
+    Test('Roller.rollN() is faster than Roller.roll()', () {
+      var expression = '4d6kh3';
+      var n = 100;
+      var rollOneTime = time(() {
+        for (var i = 0; i < n; i++) {Roller.roll(expression);}
+      });
+      var rollN = time(() {
+        Roller.rollN(expression, n);
+      });
+      return rollN < rollOneTime;
+    }, repeats: 1000)
+
     // Test('Distribution 1', () {
     //   var interpreter = Interpreter(Parser(Lexer('2d6')));
     //   var tree = interpreter.interpret();

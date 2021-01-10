@@ -47,7 +47,6 @@ void main() {
   }
   print('Calling Roller.roll($expression) $n times takes $rollTime ms => ${rollTime/n} ms avg.');
 
-
   // test time of one rollN() call
   var startTime = DateTime.now().millisecondsSinceEpoch;
   Roller.rollN(expression, n);
