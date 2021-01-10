@@ -234,14 +234,14 @@ void main() {
       return !Parser.canParse(expression);
     }),
 
-    Test('Distribution 1', () {
-      var interpreter = Interpreter(Parser(Lexer('2d6')));
-      var tree = interpreter.interpret();
-      var poss = tree.possibilities;
-      poss.sort();
-      print(poss);
-      return false;
-    }),
+    // Test('Distribution 1', () {
+    //   var interpreter = Interpreter(Parser(Lexer('2d6')));
+    //   var tree = interpreter.interpret();
+    //   var poss = tree.possibilities;
+    //   poss.sort();
+    //   print(poss);
+    //   return false;
+    // }),
 
     // Test('Absurd expression 1', () {
     //   var expression = '4d2e>1kh1e2';

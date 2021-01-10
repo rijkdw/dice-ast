@@ -204,6 +204,34 @@ List<dynamic> listSubtraction(List<dynamic> listA, List<dynamic> listB) {
 }
 
 // ------------------------------------------------------------
+// Maps
+// ------------------------------------------------------------
+
+Map<dynamic, int> listToCountMap(List<dynamic> list) {
+  var map = <dynamic, int>{};
+  var listAsSet = list.toSet();
+  for (var item in listAsSet) {
+    map[item] = countInList(list, item);
+  }
+  return map;
+}
+
+Map<dynamic, double> countMapToPercMap(Map<dynamic, int> countMap) {
+  var totalCount = sumList(countMap.values.toList());
+  var percMap = <dynamic, double>{};
+  for (var key in countMap.keys) {
+    percMap[key] = countMap[key] / totalCount * 100;
+  }
+  return percMap;
+}
+
+Map<dynamic, double> listToPercMap(List<dynamic> list) {
+  var countMap = listToCountMap(list);
+  var percMap = countMapToPercMap(countMap);
+  return percMap;  
+}
+
+// ------------------------------------------------------------
 // permutations
 // ------------------------------------------------------------
 

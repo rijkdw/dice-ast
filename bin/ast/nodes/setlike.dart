@@ -50,19 +50,19 @@ abstract class SetLike extends Node {
   @override
   List<Die> get die => List<Die>.from(joinLists(children.map((child) => child.die).toList()));
 
-  @override
-  List<num> get possibilities {
-    var returnList = <num>[];
-    // a list, containing each child's possibilities, therefore a list of lists of nums
-    var childValues = children.map((child) => child.possibilities).toList();
-    // the permutations thereof
-    var perms = permutations(childValues);
-    // for each permutation, sum the results and add it to the return-list
-    for (var perm in perms) {
-      returnList.add(sumNumList(perm));
-    }
-    return returnList;
-  }
+  // @override
+  // List<num> get possibilities {
+  //   var returnList = <num>[];
+  //   // a list, containing each child's possibilities, therefore a list of lists of nums
+  //   var childValues = children.map((child) => child.possibilities).toList();
+  //   // the permutations thereof
+  //   var perms = permutations(childValues);
+  //   // for each permutation, sum the results and add it to the return-list
+  //   for (var perm in perms) {
+  //     returnList.add(sumNumList(perm));
+  //   }
+  //   return returnList;
+  // }
 
   // SetOps
 

@@ -1,5 +1,4 @@
 import 'die.dart';
-import '../../error.dart';
 
 abstract class Node {
 
@@ -30,5 +29,8 @@ abstract class Node {
   List<Die> get die;
 
   /// The list of possible value combinations this node has.
-  List<num> get possibilities;
+  // List<num> get possibilities;
+
+  /// Get a copy of this Node.
+  Node get copy;
 }

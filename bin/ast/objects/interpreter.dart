@@ -65,6 +65,11 @@ class Interpreter extends NodeVisitor {
     visit(tree);
     return tree;
   }
+
+  Node interpretTree(Node tree) {
+    visit(tree);
+    return tree;
+  }
 }
 
 void main(List<String> args) {

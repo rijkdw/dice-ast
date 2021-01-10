@@ -2,6 +2,7 @@ import '../../utils.dart';
 import '../objects/setopvalue.dart';
 import 'die.dart';
 import '../objects/token.dart';
+import 'node.dart';
 import 'setlike.dart';
 
 class Dice extends SetLike {
@@ -124,6 +125,13 @@ class Dice extends SetLike {
   String visualise() {
     var setOpsVisualised = join(setOps.map((s) => '${s.op}${s.sel}${s.val}').toList(), '');
     return '${number}d${size}${setOpsVisualised}';
+  }
+
+  @override
+  Node get copy {
+    var copyOfThis = Dice(token.copy, number, size);
+    // copyOfThis.children.addAll(children.map((c) => c.copy).toList());
+    return copyOfThis;
   }
 
   // override Object methods

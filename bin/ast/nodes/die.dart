@@ -51,6 +51,9 @@ class Die extends Node {
   @override
   List<num> get possibilities => makeList(1, size);
 
+  @override
+  Node get copy => Die(size, value);
+
   // override Object methods
 
   @override

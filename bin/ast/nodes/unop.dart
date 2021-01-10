@@ -46,8 +46,11 @@ class UnOp extends Node {
   @override
   List<Die> get die => child.die;
 
+  // @override
+  // List<num> get possibilities => child.possibilities.map((p) => p*coefficient).toList();
+
   @override
-  List<num> get possibilities => child.possibilities.map((p) => p*coefficient).toList();
+  Node get copy => UnOp(token.copy, child.copy);
 
   // override Object methods
 

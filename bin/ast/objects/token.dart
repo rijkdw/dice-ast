@@ -30,4 +30,6 @@ class Token {
 
   @override
   String toString() => '$Token($type, \"$value\")';
+
+  Token get copy => Token(type, value);
 }
