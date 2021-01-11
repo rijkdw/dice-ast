@@ -35,7 +35,7 @@ class Roller {
 void main() {
 
   var n = 100000;
-  var expression = '4d6kh3';
+  var expression = '1d20+3+1d4';
 
   // test time of multiple roll() calls
   var rollTime = 0; // milliseconds
@@ -45,12 +45,12 @@ void main() {
     var endTime = DateTime.now().millisecondsSinceEpoch;
     rollTime += endTime - startTime;
   }
-  print('Calling Roller.roll($expression) $n times takes $rollTime ms => ${rollTime/n} ms avg.');
+  print('Calling Roller.roll($expression) $n times takes $rollTime ms.');
 
   // test time of one rollN() call
   var startTime = DateTime.now().millisecondsSinceEpoch;
   Roller.rollN(expression, n);
   var endTime = DateTime.now().millisecondsSinceEpoch;
   rollTime = endTime-startTime;
-  print('Calling Roller.rollN($expression, $n) takes $rollTime ms => ${rollTime/n} ms avg.');
+  print('Calling Roller.rollN($expression, $n) takes $rollTime ms.');
 }

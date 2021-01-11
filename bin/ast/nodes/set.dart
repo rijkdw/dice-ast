@@ -21,7 +21,7 @@ class Set extends SetLike {
   String visualise() => '(' + join(children.map((c) => c.visualise()).toList(), ', ') + ')';
 
   @override
-  Node get copy => Set(token.copy, children.map((c) => c).toList());
+  Node get copy => Set(null, children.map((c) => c).toList());
 
   // @override
   // List<Die> get die => List<Die>.from(joinLists(children.map((child) => child.die).toList()));
