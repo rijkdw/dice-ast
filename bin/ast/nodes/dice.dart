@@ -131,6 +131,7 @@ class Dice extends SetLike {
   Node get copy {
     var copyOfThis = Dice(token.copy, number, size);
     // copyOfThis.children.addAll(children.map((c) => c.copy).toList());
+    copyOfThis.setOps.addAll(setOps);
     return copyOfThis;
   }
 

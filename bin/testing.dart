@@ -255,6 +255,18 @@ void main() {
         Roller.rollN(expression, n);
       });
       return rollN < rollOneTime;
+    }, repeats: 1000),
+
+    Test('Roller.rollN() gives correct answers', () {
+      var expression = '4d6kh3';
+      var numRepeats = 100;
+      var results = Roller.rollN(expression, numRepeats);
+      var totals = results.map((r) => r.total);
+      totals.forEach((t) {
+        print(t);
+        if (t > 18 || t < 3) return false;
+      });
+      return true;
     }, repeats: 1000)
 
     // Test('Distribution 1', () {
