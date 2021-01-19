@@ -47,9 +47,6 @@ abstract class SetLike extends Node {
   @override
   int get value => sumList(keptChildrenValues);
 
-  @override
-  List<Die> get die => List<Die>.from(joinLists(children.map((child) => child.die).toList()));
-
   // @override
   // List<num> get possibilities {
   //   var returnList = <num>[];

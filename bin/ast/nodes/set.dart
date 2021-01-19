@@ -1,5 +1,6 @@
 import '../../utils.dart';
 import '../objects/token.dart';
+import 'die.dart';
 import 'node.dart';
 import 'setlike.dart';
 
@@ -25,6 +26,20 @@ class Set extends SetLike {
     var returnSet = Set(null, children.map((c) => c).toList());
     returnSet.setOps.addAll(setOps);
     return returnSet;
+  }
+
+  @override
+  List<Die> get die {
+    // return List<Die>.from(joinLists(children.map((child) => child.die).toList()));
+    var returnList = <Die>[];
+    for (var child in children) {
+      var childDie = child.die;
+      if (child.isDiscarded) {
+        childDie.forEach((cd) => cd.discard());
+      }
+      returnList.addAll(childDie);
+    }
+    return returnList;
   }
 
   // @override

@@ -262,12 +262,21 @@ void main() {
       var numRepeats = 100;
       var results = Roller.rollN(expression, numRepeats);
       var totals = results.map((r) => r.total);
+      var allInRange = true;
       totals.forEach((t) {
-        print(t);
-        if (t > 18 || t < 3) return false;
+        if (t > 18 || t < 3) {
+          allInRange = false;
+        }
       });
+      return allInRange;
+    }, repeats: 1000),
+
+    Test('Set keep/drop overwrites child kept value', () {
+      var expression = '(2d8, 3d6)kh1';
+      var result = Roller.roll(expression);
+      print(prettify(result.die));
       return true;
-    }, repeats: 1000)
+    }, repeats: 10)
 
     // Test('Distribution 1', () {
     //   var interpreter = Interpreter(Parser(Lexer('2d6')));
