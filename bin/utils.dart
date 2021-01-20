@@ -29,6 +29,7 @@ int randInRange(int min, int max) => min + _random.nextInt(max + 1 - min);
 // ------------------------------------------------------------
 
 String join(List<dynamic> list, String delim) {
+  if (list.length == 1) return list[0];
   var output = '';
   for (var i = 0; i < list.length-1; i++) {
     output += list[i].toString();

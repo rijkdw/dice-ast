@@ -24,6 +24,9 @@ class Literal extends Node {
   String visualise() => '$literalValue';
 
   @override
+  String breakdown([int level=0]) => 'Constant $literalValue';
+
+  @override
   List<Die> get die => [];
 
   @override

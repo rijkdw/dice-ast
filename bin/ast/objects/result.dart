@@ -12,6 +12,8 @@ class Result {
 
   int get total => rootNode.value;
 
+  String breakdown() => rootNode.breakdown();
+
   Node get tree {
     return rootNode;
   }

@@ -36,6 +36,18 @@ abstract class SetLike extends Node {
     });
     return list;
   }
+
+  String setOpsToString([int level=0]) {
+    if (setOps.isEmpty) {
+      return '';
+    }
+    var returnVal = '';
+    for (var i = 0; i < setOps.length; i++) {
+      var setOp = setOps[i];
+      returnVal += '\n${tabs(level+1)}${i+1}:&emsp;${setOp.breakdown()}';
+    }
+    return returnVal;
+  }
   
   /// The values of the node's children that have not been discarded.
   List<int> get keptChildrenValues => keptChildren.map((child) => child.value).toList();

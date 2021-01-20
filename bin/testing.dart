@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:collection/collection.dart';
 
 import 'ast/nodes/dice.dart';
@@ -245,18 +247,6 @@ void main() {
       return true;
     }, repeats: 100),
 
-    Test('Roller.rollN() is faster than Roller.roll()', () {
-      var expression = '4d6kh3';
-      var n = 100;
-      var rollOneTime = time(() {
-        for (var i = 0; i < n; i++) {Roller.roll(expression);}
-      });
-      var rollN = time(() {
-        Roller.rollN(expression, n);
-      });
-      return rollN < rollOneTime;
-    }, repeats: 1000),
-
     Test('Roller.rollN() gives correct answers', () {
       var expression = '4d6kh3';
       var numRepeats = 100;
@@ -270,13 +260,6 @@ void main() {
       });
       return allInRange;
     }, repeats: 1000),
-
-    Test('Set keep/drop overwrites child kept value', () {
-      var expression = '(2d8, 3d6)kh1';
-      var result = Roller.roll(expression);
-      print(prettify(result.die));
-      return true;
-    }, repeats: 10)
 
     // Test('Distribution 1', () {
     //   var interpreter = Interpreter(Parser(Lexer('2d6')));
@@ -299,5 +282,28 @@ void main() {
 
   tests.performTests();
   tests.printLog();
+
+  var expressions = <String>[
+    '4d6+4d6kh3',
+    '(1d20, 3d6)kh1',
+    '1+2+3',
+    '((1d20, 4d4, 3+3)kh2, 3d6)kh1',
+    '(1, 2, 3)+1d4',
+    '(1, 2, 3)kh2+1d4'
+  ];
+
+  var output = '';
+  for (var expression in expressions) {
+    print('=========================================');
+    var breakdown = Roller.roll(expression).breakdown();
+    print(breakdown);
+    output += expression + ':\n';
+    output += breakdown;
+    output += '\n\n';
+  }
+
+  output = output.replaceAll('\n', '<br>\n');
+
+  File('output.html').writeAsString(output);
 
 }

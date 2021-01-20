@@ -21,6 +21,9 @@ class BinOp extends Node {
   String visualise() => '${left.visualise()}${op.value}${right.visualise()}';
 
   @override
+  String breakdown([int level=0]) => '${left.breakdown()}\n${tabs(level)}${op.value}\n${tabs(level)}${right.breakdown()}';
+
+  @override
   List<Die> get die => left.die + right.die;
 
   @override

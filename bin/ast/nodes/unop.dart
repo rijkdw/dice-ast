@@ -44,6 +44,14 @@ class UnOp extends Node {
   String visualise() => '${op.value}${child.visualise()}';
 
   @override
+  String breakdown([int level=0]) {
+    if (op.type == TokenType.PLUS) {
+      return child.breakdown();
+    }
+    return '${child.breakdown()}, inverted';
+  }
+
+  @override
   List<Die> get die => child.die;
 
   // @override

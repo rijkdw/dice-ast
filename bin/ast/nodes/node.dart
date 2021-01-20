@@ -18,6 +18,10 @@ abstract class Node {
   /// Return this node in dice notation.
   String visualise();
 
+  /// Give a nice string-ified breakdown of the node.
+  String breakdown([int level=0]);
+  String tabs(int level) => '&emsp;'*level;
+
   /// Return the integer value of this node.
   int get value;
   // for a binary node, this would = A OP B

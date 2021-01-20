@@ -1,3 +1,4 @@
+import '../../roller.dart';
 import '../../utils.dart';
 import '../objects/setopvalue.dart';
 import 'die.dart';
@@ -128,6 +129,23 @@ class Dice extends SetLike {
   }
 
   @override
+  String breakdown([int level=0]) {
+    var dieAsString = join(die.map((d) => '${d.value}').toList(), ', ');
+    var totalString = 'totalling <b>$value</b>';
+    var returnVal = '${number}d${size}, which rolled [$dieAsString]';
+    if (setOps.isEmpty) {
+      returnVal += ', $totalString';
+    } else if (setOps.length == 1) {
+      returnVal += '\nwith setop ${setOps.first.breakdown()}';
+    } else {
+      returnVal += '\nwith setops';
+      returnVal += setOpsToString(level+1);
+      returnVal += '\n$totalString';
+    }
+    return returnVal;
+  }
+
+  @override
   Node get copy {
     var copyOfThis = Dice(token.copy, number, size);
     // copyOfThis.children.addAll(children.map((c) => c.copy).toList());
@@ -144,4 +162,9 @@ class Dice extends SetLike {
   }
 
   
+}
+
+void main() {
+  var dice = Roller.roll('4d6').rootNode;
+  print(dice.breakdown());
 }

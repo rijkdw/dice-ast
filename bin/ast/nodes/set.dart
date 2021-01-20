@@ -22,6 +22,22 @@ class Set extends SetLike {
   String visualise() => '(' + join(children.map((c) => c.visualise()).toList(), ', ') + ')';
 
   @override
+  String breakdown([int level=0]) {
+    var returnVal = 'A set containing';
+    for (var i = 0; i < children.length; i++) {
+      returnVal += '\n${tabs(level+1)}${i+1}: ${children[i].breakdown(level+1)}';
+    }
+    if (setOps.length == 1) {
+      returnVal += '\n${tabs(level+1)}with setop ${setOps.first.breakdown()}';
+    } else if (setOps.isNotEmpty) {
+      returnVal += '\nwith setops';
+      returnVal += setOpsToString(level+1);
+    }    
+    returnVal += '\nwith a total of <b>$value</b>';
+    return returnVal;
+  }
+
+  @override
   Node get copy {
     var returnSet = Set(null, children.map((c) => c).toList());
     returnSet.setOps.addAll(setOps);
