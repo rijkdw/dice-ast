@@ -49,7 +49,7 @@ class Die extends Node {
   String visualise() => '$value';
 
   @override
-  String breakdown([int level=0]) => 'A $size-sided die which rolled $value';
+  String toHTML([int level=0]) => '<b>$value</b> on a $size-sided die';
 
   @override
   List<num> get possibilities => makeList(1, size);

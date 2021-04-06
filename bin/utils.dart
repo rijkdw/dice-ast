@@ -39,6 +39,51 @@ String join(List<dynamic> list, String delim) {
   return output;
 }
 
+String indent(String text, int count, {String tab='&emsp;', bool indentFirst=true}) {
+  var lines = text.split('\n');
+  for (var i = 0; i < lines.length; i++) {
+    if (i == 0 && !indentFirst) {
+      continue;
+    }
+    lines[i] = tabs(count, tab: tab) + lines[i];
+  }
+  return join(lines, '\n');
+}
+
+String infinityReplace(String input, String pat, String rep) {
+  while (input.contains(pat)) {
+    input = input.replaceAll(pat, rep);
+  }
+  return input;
+}
+
+String htmlify(String text) {
+  text = text.replaceAll('\n', '<br>\n');
+  text = infinityReplace(text, '<br><br>', '<br>');
+  text = removeHTMLwhitespace(text);
+  return text;
+}
+
+String removeHTMLwhitespace(String html) {
+  var whitespacetokens = ['&emsp;', '<br>'];
+  var htmlLines = html.split('\n');
+  var cleanLines = <String>[];
+  for (var line in htmlLines) {
+    var lineStore = line;
+    for (var token in whitespacetokens) {
+      line = line.replaceAll(token, '');
+    }
+    if (line.isNotEmpty) {
+      cleanLines.add(lineStore);
+    }
+  }
+  return join(cleanLines, '\n');
+}
+
+String tabs(int count, {String tab='&emsp;'}) {
+  return tab*count;
+}
+
 String wrapWith(String s, String w, [String r]) {
   return w + s + (r ?? w);
 }
@@ -288,17 +333,9 @@ class _PermutationAlgorithmNums {
 }
 
 void main() {
-  var myStrings = ['a', 'b', 'c'];
-  print(join(myStrings, ','));
-  print(join(myStrings, '-'));
-  print(wrapWith('hey', "'"));
-  print(wrapWith('hey', '(', ')'));
-  print(makeList(3, 6));
-  print(makeList(6, 6));
-  print(listSubtraction([1, 1, 2, 3, 4, 4, 5], [1, 3, 4, 5, 6]));
-  print(getSafeMaxN([1, 3, 4, 2], 2));
-  print(getSafeMinN([1, 3, 4, 2], 5));
-  print(joinLists([[1, 2, 3], [4, 5]]));
-  print(sublist([1, 2, 3], 0, -1));
-  print(permutations([[1, 2, 3], [4, 5, 6], [7, 8, 9]]));
+  var text = 'a\nb\nc';
+  print(indent(text, 1));
+  print(indent(text, 2));
+  print(indent(text, 1, indentFirst: false));
+  print(indent(text, 2, indentFirst: false));  
 }

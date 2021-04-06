@@ -1,3 +1,5 @@
+import '../../roller.dart';
+import '../../utils.dart';
 import '../objects/token.dart';
 import 'die.dart';
 import 'node.dart';
@@ -21,7 +23,9 @@ class BinOp extends Node {
   String visualise() => '${left.visualise()}${op.value}${right.visualise()}';
 
   @override
-  String breakdown([int level=0]) => '${left.breakdown()}\n${tabs(level)}${op.value}\n${tabs(level)}${right.breakdown()}';
+  String toHTML([int level=0]) {
+    return toString();
+  }
 
   @override
   List<Die> get die => left.die + right.die;
@@ -72,4 +76,9 @@ class BinOp extends Node {
 
   @override
   String toString() => 'BinOp(left=$left, op=${op.value}, right=$right)';
+}
+
+void main() {
+  var html = Roller.roll('1+3').toHTML();
+  print(html);
 }

@@ -1,53 +1,332 @@
 4d6+4d6kh3:<br>
-4d6, which rolled [3, 6, 1, 1], totalling <b>11</b><br>
-+<br>
-4d6, which rolled [3, 4, 1, 4]<br>
-with setop keep highest 3<br>
-<br>
+BinOp(<br>
+&emsp;left=Dice(<br>
+&emsp;&emsp;total=14,<br>
+&emsp;&emsp;number=4,<br>
+&emsp;&emsp;size=6,<br>
+&emsp;&emsp;children=[<br>
+&emsp;&emsp;&emsp;Die(<br>
+&emsp;&emsp;&emsp;&emsp;size=6,<br>
+&emsp;&emsp;&emsp;&emsp;values=[<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;4<br>
+&emsp;&emsp;&emsp;&emsp;]<br>
+&emsp;&emsp;&emsp;),<br>
+&emsp;&emsp;&emsp;Die(<br>
+&emsp;&emsp;&emsp;&emsp;size=6,<br>
+&emsp;&emsp;&emsp;&emsp;values=[<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;2<br>
+&emsp;&emsp;&emsp;&emsp;]<br>
+&emsp;&emsp;&emsp;),<br>
+&emsp;&emsp;&emsp;Die(<br>
+&emsp;&emsp;&emsp;&emsp;size=6,<br>
+&emsp;&emsp;&emsp;&emsp;values=[<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;4<br>
+&emsp;&emsp;&emsp;&emsp;]<br>
+&emsp;&emsp;&emsp;),<br>
+&emsp;&emsp;&emsp;Die(<br>
+&emsp;&emsp;&emsp;&emsp;size=6,<br>
+&emsp;&emsp;&emsp;&emsp;values=[<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;4<br>
+&emsp;&emsp;&emsp;&emsp;]<br>
+&emsp;&emsp;&emsp;)<br>
+&emsp;&emsp;],<br>
+&emsp;&emsp;setOps=[<br>
+&emsp;&emsp;]<br>
+&emsp;),<br>
+&emsp;op=+,<br>
+&emsp;right=Dice(<br>
+&emsp;&emsp;total=15,<br>
+&emsp;&emsp;number=4,<br>
+&emsp;&emsp;size=6,<br>
+&emsp;&emsp;children=[<br>
+&emsp;&emsp;&emsp;Die(<br>
+&emsp;&emsp;&emsp;&emsp;size=6,<br>
+&emsp;&emsp;&emsp;&emsp;values=[<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;6<br>
+&emsp;&emsp;&emsp;&emsp;]<br>
+&emsp;&emsp;&emsp;),<br>
+&emsp;&emsp;&emsp;Die(<br>
+&emsp;&emsp;&emsp;&emsp;size=6,<br>
+&emsp;&emsp;&emsp;&emsp;values=[<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;5<br>
+&emsp;&emsp;&emsp;&emsp;]<br>
+&emsp;&emsp;&emsp;),<br>
+&emsp;&emsp;&emsp;Die(<br>
+&emsp;&emsp;&emsp;&emsp;size=6,<br>
+&emsp;&emsp;&emsp;&emsp;values=[<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;4<br>
+&emsp;&emsp;&emsp;&emsp;]<br>
+&emsp;&emsp;&emsp;),<br>
+&emsp;&emsp;&emsp;Die(<br>
+&emsp;&emsp;&emsp;&emsp;size=6,<br>
+&emsp;&emsp;&emsp;&emsp;values=[<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;3<br>
+&emsp;&emsp;&emsp;&emsp;],<br>
+&emsp;&emsp;&emsp;&emsp;--discarded<br>
+&emsp;&emsp;&emsp;)<br>
+&emsp;&emsp;],<br>
+&emsp;&emsp;setOps=[<br>
+&emsp;&emsp;&emsp;SetOp(<br>
+&emsp;&emsp;&emsp;&emsp;op="k",<br>
+&emsp;&emsp;&emsp;&emsp;sel="h",<br>
+&emsp;&emsp;&emsp;&emsp;val=3<br>
+&emsp;&emsp;&emsp;)<br>
+&emsp;&emsp;]<br>
+&emsp;)<br>
+)<br><br>
+
 (1d20, 3d6)kh1:<br>
-A set containing<br>
-&emsp;1: 1d20, which rolled [12], totalling <b>12</b><br>
-&emsp;2: 3d6, which rolled [3, 1, 1], totalling <b>5</b><br>
-&emsp;with setop keep highest 1<br>
-with a total of <b>12</b><br>
-<br>
+Set(<br>
+&emsp;children=[<br>
+&emsp;&emsp;Dice(<br>
+&emsp;&emsp;&emsp;total=20,<br>
+&emsp;&emsp;&emsp;number=1,<br>
+&emsp;&emsp;&emsp;size=20,<br>
+&emsp;&emsp;&emsp;children=[<br>
+&emsp;&emsp;&emsp;&emsp;Die(<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;size=20,<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;values=[<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;20<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;]<br>
+&emsp;&emsp;&emsp;&emsp;)<br>
+&emsp;&emsp;&emsp;],<br>
+&emsp;&emsp;&emsp;setOps=[<br>
+&emsp;&emsp;&emsp;]<br>
+&emsp;&emsp;),<br>
+&emsp;&emsp;Dice(<br>
+&emsp;&emsp;&emsp;total=6,<br>
+&emsp;&emsp;&emsp;number=3,<br>
+&emsp;&emsp;&emsp;size=6,<br>
+&emsp;&emsp;&emsp;children=[<br>
+&emsp;&emsp;&emsp;&emsp;Die(<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;size=6,<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;values=[<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;4<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;]<br>
+&emsp;&emsp;&emsp;&emsp;),<br>
+&emsp;&emsp;&emsp;&emsp;Die(<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;size=6,<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;values=[<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;1<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;]<br>
+&emsp;&emsp;&emsp;&emsp;),<br>
+&emsp;&emsp;&emsp;&emsp;Die(<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;size=6,<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;values=[<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;1<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;]<br>
+&emsp;&emsp;&emsp;&emsp;)<br>
+&emsp;&emsp;&emsp;],<br>
+&emsp;&emsp;&emsp;setOps=[<br>
+&emsp;&emsp;&emsp;]<br>
+&emsp;&emsp;)<br>
+&emsp;],<br>
+&emsp;setOps=[<br>
+&emsp;&emsp;SetOp(<br>
+&emsp;&emsp;&emsp;op="k",<br>
+&emsp;&emsp;&emsp;sel="h",<br>
+&emsp;&emsp;&emsp;val=1<br>
+&emsp;&emsp;)<br>
+&emsp;]<br>
+)<br><br>
+
 1+2+3:<br>
-Constant 1<br>
-+<br>
-Constant 2<br>
-+<br>
-Constant 3<br>
-<br>
+BinOp(<br>
+&emsp;left=BinOp(<br>
+&emsp;&emsp;left=Literal(<br>
+&emsp;&emsp;&emsp;value=1<br>
+&emsp;&emsp;),<br>
+&emsp;&emsp;op=+,<br>
+&emsp;&emsp;right=Literal(<br>
+&emsp;&emsp;&emsp;value=2<br>
+&emsp;&emsp;)<br>
+&emsp;),<br>
+&emsp;op=+,<br>
+&emsp;right=Literal(<br>
+&emsp;&emsp;value=3<br>
+&emsp;)<br>
+)<br><br>
+
 ((1d20, 4d4, 3+3)kh2, 3d6)kh1:<br>
-A set containing<br>
-&emsp;1: A set containing<br>
-&emsp;&emsp;1: 1d20, which rolled [4], totalling <b>4</b><br>
-&emsp;&emsp;2: 4d4, which rolled [4, 4, 4, 3], totalling <b>15</b><br>
-&emsp;&emsp;3: Constant 3<br>
-&emsp;&emsp;+<br>
-&emsp;&emsp;Constant 3<br>
-&emsp;&emsp;with setop keep highest 2<br>
-with a total of <b>21</b><br>
-&emsp;2: 3d6, which rolled [2, 6, 5], totalling <b>13</b><br>
-&emsp;with setop keep highest 1<br>
-with a total of <b>21</b><br>
-<br>
+Set(<br>
+&emsp;children=[<br>
+&emsp;&emsp;Set(<br>
+&emsp;&emsp;&emsp;children=[<br>
+&emsp;&emsp;&emsp;&emsp;Dice(<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;total=7,<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;number=1,<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;size=20,<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;children=[<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Die(<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;size=20,<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;values=[<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;7<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;]<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;)<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;],<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;setOps=[<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;]<br>
+&emsp;&emsp;&emsp;&emsp;),<br>
+&emsp;&emsp;&emsp;&emsp;Dice(<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;total=8,<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;number=4,<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;size=4,<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;children=[<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Die(<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;size=4,<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;values=[<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;2<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;]<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;),<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Die(<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;size=4,<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;values=[<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;1<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;]<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;),<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Die(<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;size=4,<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;values=[<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;1<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;]<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;),<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Die(<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;size=4,<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;values=[<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;4<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;]<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;)<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;],<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;setOps=[<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;]<br>
+&emsp;&emsp;&emsp;&emsp;),<br>
+&emsp;&emsp;&emsp;&emsp;BinOp(<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;left=Literal(<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;value=3<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;),<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;op=+,<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;right=Literal(<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;value=3<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;)<br>
+&emsp;&emsp;&emsp;&emsp;)<br>
+&emsp;&emsp;&emsp;],<br>
+&emsp;&emsp;&emsp;setOps=[<br>
+&emsp;&emsp;&emsp;&emsp;SetOp(<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;op="k",<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;sel="h",<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;val=2<br>
+&emsp;&emsp;&emsp;&emsp;)<br>
+&emsp;&emsp;&emsp;]<br>
+&emsp;&emsp;),<br>
+&emsp;&emsp;Dice(<br>
+&emsp;&emsp;&emsp;total=6,<br>
+&emsp;&emsp;&emsp;number=3,<br>
+&emsp;&emsp;&emsp;size=6,<br>
+&emsp;&emsp;&emsp;children=[<br>
+&emsp;&emsp;&emsp;&emsp;Die(<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;size=6,<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;values=[<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;2<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;]<br>
+&emsp;&emsp;&emsp;&emsp;),<br>
+&emsp;&emsp;&emsp;&emsp;Die(<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;size=6,<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;values=[<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;3<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;]<br>
+&emsp;&emsp;&emsp;&emsp;),<br>
+&emsp;&emsp;&emsp;&emsp;Die(<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;size=6,<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;values=[<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;1<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;]<br>
+&emsp;&emsp;&emsp;&emsp;)<br>
+&emsp;&emsp;&emsp;],<br>
+&emsp;&emsp;&emsp;setOps=[<br>
+&emsp;&emsp;&emsp;]<br>
+&emsp;&emsp;)<br>
+&emsp;],<br>
+&emsp;setOps=[<br>
+&emsp;&emsp;SetOp(<br>
+&emsp;&emsp;&emsp;op="k",<br>
+&emsp;&emsp;&emsp;sel="h",<br>
+&emsp;&emsp;&emsp;val=1<br>
+&emsp;&emsp;)<br>
+&emsp;]<br>
+)<br><br>
+
 (1, 2, 3)+1d4:<br>
-A set containing<br>
-&emsp;1: Constant 1<br>
-&emsp;2: Constant 2<br>
-&emsp;3: Constant 3<br>
-with a total of <b>6</b><br>
-+<br>
-1d4, which rolled [3], totalling <b>3</b><br>
-<br>
+BinOp(<br>
+&emsp;left=Set(<br>
+&emsp;&emsp;children=[<br>
+&emsp;&emsp;&emsp;Literal(<br>
+&emsp;&emsp;&emsp;&emsp;value=1<br>
+&emsp;&emsp;&emsp;),<br>
+&emsp;&emsp;&emsp;Literal(<br>
+&emsp;&emsp;&emsp;&emsp;value=2<br>
+&emsp;&emsp;&emsp;),<br>
+&emsp;&emsp;&emsp;Literal(<br>
+&emsp;&emsp;&emsp;&emsp;value=3<br>
+&emsp;&emsp;&emsp;)<br>
+&emsp;&emsp;],<br>
+&emsp;&emsp;setOps=[<br>
+&emsp;&emsp;]<br>
+&emsp;),<br>
+&emsp;op=+,<br>
+&emsp;right=Dice(<br>
+&emsp;&emsp;total=4,<br>
+&emsp;&emsp;number=1,<br>
+&emsp;&emsp;size=4,<br>
+&emsp;&emsp;children=[<br>
+&emsp;&emsp;&emsp;Die(<br>
+&emsp;&emsp;&emsp;&emsp;size=4,<br>
+&emsp;&emsp;&emsp;&emsp;values=[<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;4<br>
+&emsp;&emsp;&emsp;&emsp;]<br>
+&emsp;&emsp;&emsp;)<br>
+&emsp;&emsp;],<br>
+&emsp;&emsp;setOps=[<br>
+&emsp;&emsp;]<br>
+&emsp;)<br>
+)<br><br>
+
 (1, 2, 3)kh2+1d4:<br>
-A set containing<br>
-&emsp;1: Constant 1<br>
-&emsp;2: Constant 2<br>
-&emsp;3: Constant 3<br>
-&emsp;with setop keep highest 2<br>
-with a total of <b>5</b><br>
-+<br>
-1d4, which rolled [1], totalling <b>1</b><br>
-<br>
+BinOp(<br>
+&emsp;left=Set(<br>
+&emsp;&emsp;children=[<br>
+&emsp;&emsp;&emsp;Literal(<br>
+&emsp;&emsp;&emsp;&emsp;value=1<br>
+&emsp;&emsp;&emsp;),<br>
+&emsp;&emsp;&emsp;Literal(<br>
+&emsp;&emsp;&emsp;&emsp;value=2<br>
+&emsp;&emsp;&emsp;),<br>
+&emsp;&emsp;&emsp;Literal(<br>
+&emsp;&emsp;&emsp;&emsp;value=3<br>
+&emsp;&emsp;&emsp;)<br>
+&emsp;&emsp;],<br>
+&emsp;&emsp;setOps=[<br>
+&emsp;&emsp;&emsp;SetOp(<br>
+&emsp;&emsp;&emsp;&emsp;op="k",<br>
+&emsp;&emsp;&emsp;&emsp;sel="h",<br>
+&emsp;&emsp;&emsp;&emsp;val=2<br>
+&emsp;&emsp;&emsp;)<br>
+&emsp;&emsp;]<br>
+&emsp;),<br>
+&emsp;op=+,<br>
+&emsp;right=Dice(<br>
+&emsp;&emsp;total=2,<br>
+&emsp;&emsp;number=1,<br>
+&emsp;&emsp;size=4,<br>
+&emsp;&emsp;children=[<br>
+&emsp;&emsp;&emsp;Die(<br>
+&emsp;&emsp;&emsp;&emsp;size=4,<br>
+&emsp;&emsp;&emsp;&emsp;values=[<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;2<br>
+&emsp;&emsp;&emsp;&emsp;]<br>
+&emsp;&emsp;&emsp;)<br>
+&emsp;&emsp;],<br>
+&emsp;&emsp;setOps=[<br>
+&emsp;&emsp;]<br>
+&emsp;)<br>
+)<br><br>
+

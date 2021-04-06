@@ -294,15 +294,11 @@ void main() {
 
   var output = '';
   for (var expression in expressions) {
-    print('=========================================');
-    var breakdown = Roller.roll(expression).breakdown();
-    print(breakdown);
-    output += expression + ':\n';
+    var breakdown = Roller.roll(expression).toHTML();
+    output += expression + ':<br>\n';
     output += breakdown;
-    output += '\n\n';
+    output += '<br><br>\n\n';
   }
-
-  output = output.replaceAll('\n', '<br>\n');
 
   File('output.html').writeAsString(output);
 

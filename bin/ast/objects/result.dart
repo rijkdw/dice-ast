@@ -1,3 +1,4 @@
+import '../../utils.dart';
 import '../nodes/node.dart';
 import '../nodes/die.dart';
 
@@ -12,7 +13,15 @@ class Result {
 
   int get total => rootNode.value;
 
-  String breakdown() => rootNode.breakdown();
+  String toHTML() {
+
+    return htmlify(prettify(rootNode.toString()).replaceAll('   ', tabs(1)));
+
+    var htmlOutput = rootNode.toHTML();
+    htmlOutput = htmlOutput.replaceAll('\n', '<br>\n');
+    htmlOutput = infinityReplace(htmlOutput, '<br><br>', '<br>');
+    return htmlOutput;
+  }
 
   Node get tree {
     return rootNode;

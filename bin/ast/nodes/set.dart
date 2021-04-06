@@ -22,19 +22,19 @@ class Set extends SetLike {
   String visualise() => '(' + join(children.map((c) => c.visualise()).toList(), ', ') + ')';
 
   @override
-  String breakdown([int level=0]) {
-    var returnVal = 'A set containing';
+  String toHTML([int level=0]) {
+    var html = 'A set containing\n';
+    var tab = tabs(1);
     for (var i = 0; i < children.length; i++) {
-      returnVal += '\n${tabs(level+1)}${i+1}: ${children[i].breakdown(level+1)}';
+      var number = i+1;
+      var childHTML = indent(children[i].toHTML(), level+1);
+      html += '$tab$number:$childHTML\n';
     }
-    if (setOps.length == 1) {
-      returnVal += '\n${tabs(level+1)}with setop ${setOps.first.breakdown()}';
-    } else if (setOps.isNotEmpty) {
-      returnVal += '\nwith setops';
-      returnVal += setOpsToString(level+1);
-    }    
-    returnVal += '\nwith a total of <b>$value</b>';
-    return returnVal;
+    if (setOps.isNotEmpty) {
+      html += 'with setops\n';
+    }
+    html += 'totalling <b>$value</b>';
+    return indent(htmlify(html), level);
   }
 
   @override

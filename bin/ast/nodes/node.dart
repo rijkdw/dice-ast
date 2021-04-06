@@ -19,8 +19,7 @@ abstract class Node {
   String visualise();
 
   /// Give a nice string-ified breakdown of the node.
-  String breakdown([int level=0]);
-  String tabs(int level) => '&emsp;'*level;
+  String toHTML([int level=0]);
 
   /// Return the integer value of this node.
   int get value;

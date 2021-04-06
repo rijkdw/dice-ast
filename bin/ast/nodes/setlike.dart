@@ -36,18 +36,6 @@ abstract class SetLike extends Node {
     });
     return list;
   }
-
-  String setOpsToString([int level=0]) {
-    if (setOps.isEmpty) {
-      return '';
-    }
-    var returnVal = '';
-    for (var i = 0; i < setOps.length; i++) {
-      var setOp = setOps[i];
-      returnVal += '\n${tabs(level+1)}${i+1}:&emsp;${setOp.breakdown()}';
-    }
-    return returnVal;
-  }
   
   /// The values of the node's children that have not been discarded.
   List<int> get keptChildrenValues => keptChildren.map((child) => child.value).toList();
@@ -58,6 +46,24 @@ abstract class SetLike extends Node {
 
   @override
   int get value => sumList(keptChildrenValues);
+
+  @override
+  String toHTML([int level=0]) {
+    String html;
+    if (this is Set) html = 'A set containing\n';
+    if (this is Dice) html = 'A set of dice containing';
+    var tab = tabs(1);
+    for (var i = 0; i < children.length; i++) {
+      var number = i+1;
+      var childHTML = indent(children[i].toHTML(), level+1);
+      html += '$tab$number:$childHTML\n';
+    }
+    if (setOps.isNotEmpty) {
+      html += 'with setops\n';
+    }
+    html += 'totalling <b>$value</b>';
+    return indent(htmlify(html), level);
+  }
 
   // @override
   // List<num> get possibilities {

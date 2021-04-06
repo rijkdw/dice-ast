@@ -128,22 +128,8 @@ class Dice extends SetLike {
     return '${number}d${size}${setOpsVisualised}';
   }
 
-  @override
-  String breakdown([int level=0]) {
-    var dieAsString = join(die.map((d) => '${d.value}').toList(), ', ');
-    var totalString = 'totalling <b>$value</b>';
-    var returnVal = '${number}d${size}, which rolled [$dieAsString]';
-    if (setOps.isEmpty) {
-      returnVal += ', $totalString';
-    } else if (setOps.length == 1) {
-      returnVal += '\nwith setop ${setOps.first.breakdown()}';
-    } else {
-      returnVal += '\nwith setops';
-      returnVal += setOpsToString(level+1);
-      returnVal += '\n$totalString';
-    }
-    return returnVal;
-  }
+  // @override
+  // String toHTML([int level=0]) => toString();
 
   @override
   Node get copy {
@@ -162,9 +148,4 @@ class Dice extends SetLike {
   }
 
   
-}
-
-void main() {
-  var dice = Roller.roll('4d6').rootNode;
-  print(dice.breakdown());
 }
