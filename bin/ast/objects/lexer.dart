@@ -1,6 +1,6 @@
 import 'token.dart';
-import '../utils.dart';
-import '../error.dart' as error;
+import '../../utils.dart';
+import '../../error.dart' as error;
 
 class Lexer {
   // ATTRIBUTES
@@ -183,7 +183,7 @@ class Lexer {
       //   return Token(TokenType.DICESEP, 'd');
       // }
       // set op operation
-      if (['e', 'k', 'p', 'r', 'n', 'x'].contains(currentChar)) {
+      if (['e', 'k', 'p', 'r', 'n', 'x', 'a', 'o'].contains(currentChar)) {
         var val = currentChar;
         advance();
         return Token(TokenType.SETOP_OP, val);
